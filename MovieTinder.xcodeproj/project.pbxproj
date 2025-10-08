@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		6E8E4A892E94168A005FE7C9 /* TMDb in Frameworks */ = {isa = PBXBuildFile; productRef = 6E8E4A882E94168A005FE7C9 /* TMDb */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		C8A6FC2C2E8D76A300FCA4D3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6E8E4A892E94168A005FE7C9 /* TMDb in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +117,7 @@
 			);
 			name = MovieTinder;
 			packageProductDependencies = (
+				6E8E4A882E94168A005FE7C9 /* TMDb */,
 			);
 			productName = MovieTinder;
 			productReference = C8A6FC1E2E8D76A100FCA4D3 /* MovieTinder.app */;
@@ -195,6 +201,9 @@
 			);
 			mainGroup = C8A6FC152E8D76A100FCA4D3;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				6E8E4A872E94168A005FE7C9 /* XCRemoteSwiftPackageReference "TMDb" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C8A6FC1F2E8D76A100FCA4D3 /* Products */;
 			projectDirPath = "";
@@ -570,6 +579,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6E8E4A872E94168A005FE7C9 /* XCRemoteSwiftPackageReference "TMDb" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/adamayoung/TMDb.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 13.3.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6E8E4A882E94168A005FE7C9 /* TMDb */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6E8E4A872E94168A005FE7C9 /* XCRemoteSwiftPackageReference "TMDb" */;
+			productName = TMDb;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C8A6FC162E8D76A100FCA4D3 /* Project object */;
 }
