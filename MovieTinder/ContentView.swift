@@ -24,7 +24,12 @@ struct ContentView: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                     Spacer()
                     
-                    NavigationLink(destination: NumberPeople()) {
+                    NavigationLink{
+                        NumberPeople{ count in
+                            self.players = makePlayers(count: count)
+                            self.goToReady = true}
+                    }
+                    label: {
                         Text("Pick a Movie")
                             .font(.system(size: 30, weight: .bold, design: .default))
                             .padding()
@@ -35,6 +40,9 @@ struct ContentView: View {
                             .padding(.horizontal,40)
                     }
                     .padding(.bottom, 120)
+                    
+                    NavigationLink(
+                        destination: {ReadyToPick(}
                 }
             }
             .navigationBarHidden(true)

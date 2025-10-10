@@ -7,7 +7,9 @@
 import SwiftUI
 
 struct NumberPeople: View {
+    var onSelect: (Int) -> Void = { _ in }
     var body: some View {
+        let navy = Color(red: 15/225, green: 34/255, blue: 116/225)
         ZStack {
             Image("BackgroundImage")
                 .resizable()
@@ -25,6 +27,22 @@ struct NumberPeople: View {
                     .frame(maxWidth: .infinity, alignment: .center)
                 Spacer()
                     .navigationBarHidden(true)
+                
+                LazyVGrid(
+                    columns: Array(repeating: GridItem(.fixed(150), spacing: 20), count: 2), spacing: 20)
+                {ForEach(1...8, id: \.self) { number in
+                    Button(action: {
+                        onSelect(number)
+                    }) {
+                        Text("\(number)")
+                            .font(.system(size: 32, weight: .bold))
+                            .frame(width: 130, height: 100)
+                            .background(navy)
+                            .cornerRadius(12)
+                            .foregroundColor(.white)
+                    }}}
+                .padding(.top, 0)
+                Spacer()
             }
         }
     }
