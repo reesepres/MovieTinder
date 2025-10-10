@@ -13,13 +13,15 @@ import TMDb
 class TmdbApi: ObservableObject {
     private let tmdbClient = TMDbClient(apiKey: "548556ec9c8ef03ab9b6cd54872865a2")
 
-    @Published var discoveredMovies: [String] = []
+    @Published var discoveredTitles: [String] = []
+    @Published var discoveredMovies: [MovieListItem] = []
     @Published var fightClubDetails: Movie?
 
     func fetchDiscoveredMovies() async {
         do {
             let movies = try await tmdbClient.discover.movies(page: Int.random(in: 1...500)).results
-            self.discoveredMovies = movies.map { $0.title }
+            self.discoveredTitles = movies.map { $0.title }
+            self.discoveredMovies = movies
         } catch {
             print("Error discovering movies: \(error)")
         }
