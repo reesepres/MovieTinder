@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var goToReady: Bool = false
+    @State private var players: [Player]? = nil
     var body: some View {
         let navy = Color(red: 15/225, green: 34/255, blue: 116/225)
         NavigationStack {
@@ -40,10 +42,11 @@ struct ContentView: View {
                             .padding(.horizontal,40)
                     }
                     .padding(.bottom, 120)
-                    
-                    NavigationLink(
-                        destination: {ReadyToPick(}
                 }
+            }
+            .toolbar(.hidden, for: .navigationBar)
+            .navigationDestination(isPresented: $goToReady) {
+                ReadyToPick(players: players ?? [])
             }
             .navigationBarHidden(true)
         }
