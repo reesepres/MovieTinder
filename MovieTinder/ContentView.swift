@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct ContentView: View {
+
     @State private var goToReady: Bool = false
     @State private var players: [Player]? = nil
+    
     var body: some View {
         let navy = Color(red: 15/225, green: 34/255, blue: 116/225)
         NavigationStack {
