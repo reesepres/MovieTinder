@@ -48,7 +48,7 @@ struct ContentView: View {
             }
             .toolbar(.hidden, for: .navigationBar)
             .navigationDestination(isPresented: $goToReady) {
-                ReadyToPick(players: players ?? [])
+                GameFlowView(players: players ?? [])
             }
             .navigationBarHidden(true)
         }

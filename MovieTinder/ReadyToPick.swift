@@ -9,31 +9,52 @@ import SwiftUI
 struct ReadyToPick: View {
     let players: [Player]
     @State private var index = 0
-
+    
     var body: some View {
-        if index < players.count {
-            let player = players[index]
-            VStack(spacing: 20) {
-                Text("Player \(player.id + 1)")
-                    .font(.largeTitle)
-
-                Button("Start") {
-                    index += 1   // later this will go to your swipe screen
+        ZStack {
+            Image("BackgroundImage")
+                .resizable()
+                .scaledToFill()
+                .ignoresSafeArea()
+            
+            if index < players.count {
+                let player = players[index]
+                
+                VStack(spacing: 200) {
+                    
+                    Text("Movie Tinder")
+                        .font(.system(size: 60, design: .serif))
+                        .padding(.top, 60)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                    
+                    Button(action: {
+                        index += 1
+                    }){
+                        Text("I'm Ready to\nPick!")
+                    
+                    .font(.system(size: 35, design: .default))
+                    .padding()
+                    .frame(width: 250, height: 150)
+                    .background(player.color)
+                    .foregroundColor(.black)
+                    .cornerRadius(12)
+                    .shadow(color: .black.opacity(0.6), radius: 12, x: 0, y: 6)
+                    }
+                    Spacer()
                 }
-                .font(.title)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding()
-                .frame(maxWidth: 200)
-                .background(player.color)
-                .foregroundColor(.white)
-                .cornerRadius(12)
+            } else {
+                Text("All players done!")
+                    .font(.title)
             }
-        } else {
-            Text("All players done!")
-                .font(.title)
+            Spacer()
         }
+        
     }
 }
 
 #Preview {
     ReadyToPick(players: makePlayers(count: 3))
 }
+
