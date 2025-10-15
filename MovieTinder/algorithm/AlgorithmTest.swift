@@ -7,7 +7,6 @@
 
 class MovieVotingManager {
     
-    }
     var movies: [String]
     var votes: [String: [Bool]] // userID → yes/no for each movie
     
