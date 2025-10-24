@@ -1,11 +1,5 @@
-//
-//  Flow.swift
-//  MovieTinder
-//
-//  Created by Reese Preston on 10/11/25.
-//
-
 import SwiftUI
+import TMDb
 
 private enum Stage: Equatable {
     case ready(playerIndex: Int)
@@ -15,9 +9,11 @@ private enum Stage: Equatable {
 
 struct GameFlowView: View {
     let players: [Player]
+    let movies: [MovieListItem]
     private let totalSlides = 10
 
     @State private var stage: Stage = .ready(playerIndex: 0)
+    @State private var currentMovieIndex = 0
 
     var body: some View {
         switch stage {
@@ -27,8 +23,14 @@ struct GameFlowView: View {
             }
 
         case .swipe(let i, let slide):
-            YesNoScreen (backgroundColor: players[i].color, index: slide, total: totalSlides) {
+            YesNoScreen(
+                backgroundColor: players[i].color,
+                index: slide,
+                total: totalSlides,
+                movie: movies.indices.contains(currentMovieIndex) ? movies[currentMovieIndex] : nil
+            ) {
                 let nextSlide = slide + 1
+                currentMovieIndex += 1
                 if nextSlide < totalSlides {
                     stage = .swipe(playerIndex: i, slide: nextSlide)
                 } else {
@@ -48,6 +50,7 @@ struct GameFlowView: View {
         }
     }
 }
+
 private struct FillerReadyScreen: View {
     let player: Player
     var onStart: () -> Void
@@ -87,5 +90,29 @@ private struct FillerReadyScreen: View {
 }
 
 #Preview {
-    GameFlowView(players: makePlayers(count: 2))
+    let mockMovies: [MovieListItem] = [
+        MovieListItem(
+            id: 1,
+            title: "Fight Club",
+            originalTitle: "Fight Club",
+            originalLanguage: "en",
+            overview: "A ticking-time-bomb insomniac...",
+            genreIDs: [18],
+            releaseDate: Date(timeIntervalSince1970: 937392000),
+            posterPath: nil
+        ),
+        MovieListItem(
+            id: 2,
+            title: "Inception",
+            originalTitle: "Inception",
+            originalLanguage: "en",
+            overview: "A thief who steals corporate secrets...",
+            genreIDs: [28, 878],
+            releaseDate: Date(timeIntervalSince1970: 1279257600),
+            posterPath: nil
+            
+        )
+    ]
+    GameFlowView(players: makePlayers(count: 2), movies: mockMovies)
 }
+
