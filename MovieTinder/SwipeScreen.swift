@@ -19,10 +19,28 @@ struct YesNoScreen: View {
                     .padding(.top, 10)
                     .frame(maxWidth: .infinity, alignment: .center)
                 
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(Color.white)
-                    .frame(width:260, height: 300)
-                
+                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w500/\(movie?.posterPath?.absoluteString ?? "")")) { phase in
+                                switch phase {
+                                case .empty:
+                                    ProgressView() // While loading
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 200, height: 300)
+                                        .cornerRadius(12)
+                                        .shadow(radius: 5)
+                                case .failure:
+                                    Image(systemName: "photo")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 200, height: 300)
+                                        .foregroundColor(.gray)
+                                @unknown default:
+                                    EmptyView()
+                                }
+                            }
+
                 HStack(spacing: 4) {
                     ForEach(0..<5, id: \.self){ _ in
                         Image(systemName: "star.fill")

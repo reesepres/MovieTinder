@@ -30,7 +30,7 @@ struct GameFlowView: View {
                 movie: movies.indices.contains(currentMovieIndex) ? movies[currentMovieIndex] : nil
             ) {
                 let nextSlide = slide + 1
-                currentMovieIndex += 1
+                currentMovieIndex = (currentMovieIndex+1) % totalSlides
                 if nextSlide < totalSlides {
                     stage = .swipe(playerIndex: i, slide: nextSlide)
                 } else {
