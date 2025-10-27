@@ -85,7 +85,7 @@ struct YesNoScreen: View {
                     .foregroundColor(.black)
                     .padding(.top)
                 }
-                .onChange(of: index) { _ in
+                .onChange(of: index, initial: false) { _, _ in
                     withAnimation(.easeInOut) {
                         proxy.scrollTo("top", anchor: .top)
                     }
@@ -102,7 +102,7 @@ struct YesNoScreen: View {
             title: "Fight Club",
             originalTitle: "Fight Club",
             originalLanguage: "en",
-            overview: "A ticking-time-bomb insomniac and a soap salesman channel primal male aggression into a shocking new form of therapy.",
+            overview: "A ticking-time-bomb insomniac and a soap salesman channel primal male aggression into a shocking new form of therapy. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis quis lorem et diam lobortis molestie. Suspendisse condimentum mauris at ultricies placerat. Maecenas maximus elit et augue condimentum aliquam. Suspendisse potenti. Fusce nec purus quis turpis consectetur bibendum a non ligula. Fusce faucibus aliquam aliquet. In rutrum nisl orci, eu fringilla elit mattis at. Fusce maximus fringilla nibh, nec viverra ipsum consectetur eget. Sed ac diam sit amet eros mattis rutrum eget at odio. Ut quam nulla, rutrum at ullamcorper a, sollicitudin eget elit. Praesent mollis tincidunt quam. Nam sagittis, eros ac iaculis tincidunt, odio massa scelerisque lectus, ut imperdiet ante lectus non turpis. Mauris laoreet augue quis dolor iaculis fringilla. Aliquam id tellus pulvinar, rutrum nibh eu, imperdiet purus. Vivamus eu arcu viverra, sagittis sem sed, aliquam quam. Quisque nec viverra arcu, in luctus felis.",
             genreIDs: [18],
             releaseDate: Date(timeIntervalSince1970: 937392000),
             posterPath: nil
