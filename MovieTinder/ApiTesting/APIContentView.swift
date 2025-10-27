@@ -15,7 +15,7 @@ struct APIContentView: View {
         VStack(spacing: 20) {
             Button("Fetch Discovered Movies") {
                 Task {
-                    await clientManager.fetchDiscoveredMovies() // call to create list of strings, accessed from class variable "clientManager.discoveredMovies" @Huthaifa
+                    await clientManager.fetchDiscoveredMovies() // call to create list of strings, accessed from class variable "clientManager.discoveredTitles" @Huthaifa
                 }
             }
 
@@ -30,8 +30,8 @@ struct APIContentView: View {
                     .font(.headline)
             }
 
-            List(clientManager.discoveredMovies, id: \.self) {
-                movie in Text(movie)
+            List(clientManager.discoveredTitles, id: \.self) {
+                title in Text(title)
             }
         }
         .padding()
