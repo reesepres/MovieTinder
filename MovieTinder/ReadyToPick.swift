@@ -16,7 +16,7 @@ struct ReadyToPick: View {
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
-            
+           
             if index < players.count {
                 let player = players[index]
                 
