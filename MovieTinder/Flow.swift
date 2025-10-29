@@ -45,7 +45,7 @@ struct GameFlowView: View {
         case .ready(let i):
             FillerReadyScreen(player: players[i]) {
                 stage = .swipe(playerIndex: i, slide: 0)
-            }
+            }.navigationBarBackButtonHidden(true)
 
         case .swipe(let i, let slide):
             YesNoScreen(
@@ -64,7 +64,7 @@ struct GameFlowView: View {
                         ? .ready(playerIndex: nextPlayer)
                         : .done
                 }
-            }
+            }.navigationBarBackButtonHidden(true)
 
         case .done:
                    ResultsView(
@@ -76,7 +76,7 @@ struct GameFlowView: View {
                        onExit: {
                            dismiss()
                        }
-                   )
+                   ).navigationBarBackButtonHidden(true)
                }
            }
     //ALGORITHM GOES IN HERE!!!!!
