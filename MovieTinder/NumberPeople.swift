@@ -18,11 +18,11 @@ struct NumberPeople: View {
            
             VStack {
                 Text("How many people")
-                    .font(.system(size: 48, design: .serif))
+                    .font(.system(size: 40, design: .serif))
                     .padding(.top, 40)
                     .frame(maxWidth: .infinity, alignment: .center)
                 Text("are watching?")
-                    .font(.system(size: 48, design: .serif))
+                    .font(.system(size: 40, design: .serif))
                     .padding(.top, 0)
                     .frame(maxWidth: .infinity, alignment: .center)
                 Spacer()
