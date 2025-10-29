@@ -50,7 +50,7 @@ struct YesNoScreen: View {
                             .padding(.top, 8)
 
                         HStack(spacing: 4) {
-                            ForEach(0..<Int(movie?.voteAverage ?? 0) / 2, id: \.self) { _ in
+                            ForEach(0..<Int(round(movie?.voteAverage ?? 0)) / 2, id: \.self) { _ in
                                 Image(systemName: "star.fill")
                                     .font(.title3)
                                     .foregroundColor(.black)
@@ -105,7 +105,8 @@ struct YesNoScreen: View {
             overview: "A ticking-time-bomb insomniac and a soap salesman channel primal male aggression into a shocking new form of therapy. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis quis lorem et diam lobortis molestie. Suspendisse condimentum mauris at ultricies placerat. Maecenas maximus elit et augue condimentum aliquam. Suspendisse potenti. Fusce nec purus quis turpis consectetur bibendum a non ligula. Fusce faucibus aliquam aliquet. In rutrum nisl orci, eu fringilla elit mattis at. Fusce maximus fringilla nibh, nec viverra ipsum consectetur eget. Sed ac diam sit amet eros mattis rutrum eget at odio. Ut quam nulla, rutrum at ullamcorper a, sollicitudin eget elit. Praesent mollis tincidunt quam. Nam sagittis, eros ac iaculis tincidunt, odio massa scelerisque lectus, ut imperdiet ante lectus non turpis. Mauris laoreet augue quis dolor iaculis fringilla. Aliquam id tellus pulvinar, rutrum nibh eu, imperdiet purus. Vivamus eu arcu viverra, sagittis sem sed, aliquam quam. Quisque nec viverra arcu, in luctus felis.",
             genreIDs: [18],
             releaseDate: Date(timeIntervalSince1970: 937392000),
-            posterPath: nil
+            posterPath: nil,
+            voteAverage: 7.6
         )
     ]
     YesNoScreen(backgroundColor: .mint, index: 0, total: 10, movie: mockMovies.first) { }
