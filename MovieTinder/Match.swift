@@ -8,7 +8,7 @@ import SwiftUI
 import TMDb
 
 struct Match: View {
-    let movie: MovieListItem
+    let movie: MovieListItem?
     let onExit: () -> Void
 
     var body: some View {
@@ -22,6 +22,31 @@ struct Match: View {
                 Text("MATCH!")
                     .font(.system(size: 60, design: .serif))
                     .padding(.top, 40)
+                
+                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w500/\(movie?.posterPath?.absoluteString ?? "")")) { phase in
+                    switch phase {
+                    case .empty:
+                        ProgressView()
+                            .frame(height: 500)
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: .infinity)
+                            .cornerRadius(20)
+                            .shadow(radius: 10)
+                            .padding(.horizontal)
+                    case .failure:
+                        Image(systemName: "photo")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxHeight: 300, alignment: .center)
+                            
+                            .foregroundColor(.gray)
+                    @unknown default:
+                        EmptyView()
+                    }
+                }
                 
                 Button("All Done!", action: onExit)
                     .font(.headline)

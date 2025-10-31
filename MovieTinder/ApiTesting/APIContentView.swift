@@ -26,7 +26,7 @@ struct APIContentView: View {
             }
 
             if let fightClub = clientManager.fightClubDetails {
-                Text("Fight Club: \(fightClub.title)")
+                Text("Fight Club: \(fightClub.posterPath)")
                     .font(.headline)
             }
 

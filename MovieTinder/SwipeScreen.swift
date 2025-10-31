@@ -55,6 +55,22 @@ struct YesNoScreen: View {
                                     .font(.title3)
                                     .foregroundColor(.black)
                             }
+                            if(Int(round(movie?.voteAverage ?? 0)) % 2 != 0){
+                                Image(systemName: "star.leadinghalf.filled")
+                                    .font(.title3)
+                                    .foregroundColor(.black)
+                                ForEach(0..<(4-Int(round((movie?.voteAverage ?? 0)))/2), id: \.self){ _ in
+                                    Image(systemName: "star")
+                                        .font(.title3)
+                                        .foregroundColor(.black)
+                                }
+                            } else {
+                                ForEach(0..<(5-Int(round((movie?.voteAverage ?? 0)))/2), id: \.self){ _ in
+                                    Image(systemName: "star")
+                                        .font(.title3)
+                                        .foregroundColor(.black)
+                                }
+                            }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal)
@@ -106,7 +122,7 @@ struct YesNoScreen: View {
             genreIDs: [18],
             releaseDate: Date(timeIntervalSince1970: 937392000),
             posterPath: nil,
-            voteAverage: 7.6
+            voteAverage: 4.6
         )
     ]
     YesNoScreen(backgroundColor: .mint, index: 0, total: 10, movie: mockMovies.first) { }
