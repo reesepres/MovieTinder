@@ -116,10 +116,10 @@ struct GameFlowView: View {
         }
 
         // find the highest like count
-        guard let maxLikes = likeCountsByMovie.values.max() else {
+        let maxLikes = likeCountsByMovie.values.max()
+        if(maxLikes ?? 0 < 1){
             return .none
         }
-
         // which movies hit that top score?
         let winners = movies.filter { movie in
             likeCountsByMovie[movie.id] == maxLikes
