@@ -2,7 +2,7 @@ import SwiftUI
 import TMDb
 
 struct ContentView: View {
-
+    
     @State private var goToReady: Bool = false
     @State private var players: [Player]? = nil
     @StateObject private var clientManager = TmdbApi()
