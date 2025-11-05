@@ -6,7 +6,7 @@ struct YesNoScreen: View {
     let index: Int
     let total: Int
     let movie: MovieListItem?
-    var onTap: () -> Void
+    var onVote: (Bool) -> Void
 
     var body: some View {
         ZStack {
@@ -23,12 +23,12 @@ struct YesNoScreen: View {
                             switch phase {
                             case .empty:
                                 ProgressView()
-                                    .frame(height: 500)
+                                    .frame(height: 400)
                             case .success(let image):
                                 image
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(maxWidth: .infinity)
+                                    .frame(maxWidth: 300)
                                     .cornerRadius(20)
                                     .shadow(radius: 10)
                                     .padding(.horizontal)
@@ -36,7 +36,7 @@ struct YesNoScreen: View {
                                 Image(systemName: "photo")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(height: 500)
+                                    .frame(height: 300)
                                     .foregroundColor(.gray)
                             @unknown default:
                                 EmptyView()
@@ -81,14 +81,14 @@ struct YesNoScreen: View {
                             .padding(.horizontal)
 
                         HStack(spacing: 90) {
-                            Button("No") { onTap() }
+                            Button("No") { onVote(false) }
                                 .font(.title3.bold())
                                 .frame(width: 110, height: 80)
                                 .background(Color.red)
                                 .border(.black, width: 3.5)
                                 .cornerRadius(10)
 
-                            Button("Yes") { onTap() }
+                            Button("Yes") { onVote(true) }
                                 .font(.title3.bold())
                                 .frame(width: 110, height: 80)
                                 .background(Color.green)
@@ -103,7 +103,7 @@ struct YesNoScreen: View {
                 }
                 .onChange(of: index, initial: false) { _, _ in
                     withAnimation(.easeInOut) {
-                        proxy.scrollTo("top", anchor: .top)
+//                        proxy.scrollTo("top", anchor: .top)
                     }
                 }
             }
@@ -125,5 +125,5 @@ struct YesNoScreen: View {
             voteAverage: 4.6
         )
     ]
-    YesNoScreen(backgroundColor: .mint, index: 0, total: 10, movie: mockMovies.first) { }
+    YesNoScreen(backgroundColor: .mint, index: 0, total: 10, movie: mockMovies.first) {_ in }
 }

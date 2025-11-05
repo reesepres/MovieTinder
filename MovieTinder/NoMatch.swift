@@ -21,6 +21,7 @@ struct NoMatch: View {
             VStack{
                 Text("NO MATCHES!")
                     .font(.system(size: 55, design: .serif))
+                    .foregroundColor(navy)
                     .padding(.top, 60)
                     .frame(maxWidth: .infinity, alignment: .center)
                 Button("Restart!", action: onRestart)

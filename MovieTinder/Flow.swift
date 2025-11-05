@@ -33,8 +33,10 @@ private struct ResultsView: View {
 
 struct GameFlowView: View {
     let players: [Player]
-    let movies: [MovieListItem]
+    @State var movies: [MovieListItem]
     private let totalSlides = 10
+    
+    @State private var votes: [Int: [Bool]] = [:]
 
     @State private var stage: Stage = .ready(playerIndex: 0)
     @State private var currentMovieIndex = 0
@@ -51,35 +53,54 @@ struct GameFlowView: View {
             YesNoScreen(
                 backgroundColor: players[i].color,
                 index: slide,
-                total: totalSlides,
-                movie: movies.indices.contains(currentMovieIndex) ? movies[currentMovieIndex] : nil
-            ) {
-                let nextSlide = slide + 1
-                currentMovieIndex = (currentMovieIndex+1) % totalSlides
-                if nextSlide < totalSlides {
-                    stage = .swipe(playerIndex: i, slide: nextSlide)
-                } else {
-                    let nextPlayer = i + 1
-                    stage = (nextPlayer < players.count)
-                        ? .ready(playerIndex: nextPlayer)
-                        : .done
+                total: movies.count,
+                movie: movies.indices.contains(currentMovieIndex) ? movies[currentMovieIndex] : nil,
+                onVote: { liked in
+                    guard let movie = movies[safe: currentMovieIndex] else {return}
+                    recordVote(for: movie.id, liked: liked, playerIndex: i)
+                    let nextSlide = slide + 1
+                    currentMovieIndex = (currentMovieIndex+1) % movies.count
+                    if nextSlide < movies.count {
+                        stage = .swipe(playerIndex: i, slide: nextSlide)
+                    } else {
+                        let nextPlayer = i + 1
+                        stage = (nextPlayer < players.count)
+                            ? .ready(playerIndex: nextPlayer)
+                            : .done
+                    }
                 }
-            }.navigationBarBackButtonHidden(true)
+            ) .navigationBarBackButtonHidden(true)
 
         case .done:
-                   ResultsView(
-                       outcome: placeholderOutcome(players: players, movies: movies),
-                       onRestart: {
-                           currentMovieIndex = 0
-                           stage = .ready(playerIndex: 0)
-                       },
-                       onExit: {
-                           dismiss()
-                       }
-                   ).navigationBarBackButtonHidden(true)
+            let outcome = computeOutcome()
+
+                ResultsView(
+                    outcome: outcome,
+                    onRestart: {
+                        if case .multiple(let tiedMovies) = outcome, !tiedMovies.isEmpty {
+                            // Run-off only if we have movies to retry
+                            movies = tiedMovies
+                            votes.removeAll()
+                            currentMovieIndex = 0
+                            stage = .ready(playerIndex: 0)
+                        } else {
+                            // No movies left — go to NoMatch instead
+                            stage = .done
+                        }
+                    },
+                    onExit: {
+                        dismiss()
+                    }
+                ).navigationBarBackButtonHidden(true)
                }
            }
     //ALGORITHM GOES IN HERE!!!!!
+    private func recordVote(for movieID: Int, liked: Bool, playerIndex: Int){
+        if votes[movieID] == nil {
+            votes[movieID] = Array(repeating: false, count: players.count)
+        }
+        votes[movieID]?[playerIndex] = liked
+    }
     private func placeholderOutcome(players: [Player], movies: [MovieListItem]) -> Outcome {
             guard !movies.isEmpty else { return .none }
             switch players.count % 3 {
@@ -88,6 +109,31 @@ struct GameFlowView: View {
             default: return .multiple(Array(movies.prefix(min(5, movies.count))))
             }
         }
+    private func computeOutcome() -> Outcome {
+        // count how many "true" votes each movie got
+        let likeCountsByMovie: [Int: Int] = votes.mapValues { arr in
+            arr.filter { $0 }.count
+        }
+
+        // find the highest like count
+        guard let maxLikes = likeCountsByMovie.values.max() else {
+            return .none
+        }
+
+        // which movies hit that top score?
+        let winners = movies.filter { movie in
+            likeCountsByMovie[movie.id] == maxLikes
+        }
+
+        switch winners.count {
+        case 0:
+            return .none
+        case 1:
+            return .single(winners[0])
+        default:
+            return .multiple(winners)
+        }
+    }
 }
 
 private struct FillerReadyScreen: View {
@@ -125,6 +171,12 @@ private struct FillerReadyScreen: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding()
         }
+    }
+}
+
+extension Array {
+    subscript(safe index: Int) -> Element? {
+        indices.contains(index) ? self[index] : nil
     }
 }
 
