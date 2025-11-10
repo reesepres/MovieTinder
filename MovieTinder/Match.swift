@@ -148,7 +148,7 @@ struct Matches: View {
                                         case .success(let image):
                                             image
                                                 .resizable()
-                                                .scaledToFit()   // ✅ keeps proportions
+                                                .scaledToFit()
                                                 .frame(maxWidth: UIScreen.main.bounds.width * 0.85)
                                                 .cornerRadius(16)
                                                 .shadow(radius: 8)
@@ -205,7 +205,7 @@ struct Matches: View {
                         .cornerRadius(12)
 
                     Button("Random!") {
-                        // Optional: Random selection logic
+                        // not implemented selection logic
                     }
                     .font(.headline)
                     .padding()
