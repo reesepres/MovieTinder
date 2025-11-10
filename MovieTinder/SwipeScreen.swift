@@ -103,7 +103,7 @@ struct YesNoScreen: View {
                 }
                 .onChange(of: index, initial: false) { _, _ in
                     withAnimation(.easeInOut) {
-//                        proxy.scrollTo("top", anchor: .top)
+                        proxy.scrollTo("top", anchor: .top)
                     }
                 }
             }
