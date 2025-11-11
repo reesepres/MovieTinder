@@ -19,7 +19,11 @@ class TmdbApi: ObservableObject {
 
     func fetchDiscoveredMovies() async {
         do {
-            let movies = try await tmdbClient.discover.movies(page: Int.random(in: 1...500)).results
+            /**
+                            Filter options: "Netflix", "Disney Plus", "Amazon Prime Video",  "Apple TV+",  "Hulu", "Crunchyroll",
+                                      "HBO Max", "Peacock Premium", "Paramount Plus", "Youtube TV"
+             */
+            let movies = try await Array(tmdbClient.discover.movies(page: Int.random(in: 1...500)).results[0..<10])
             self.discoveredTitles = movies.map { $0.title }
             self.discoveredMovies = movies
         } catch {
