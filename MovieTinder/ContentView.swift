@@ -9,7 +9,7 @@ struct ContentView: View {
     @State private var movies: [MovieListItem] = []
 
     var body: some View {
-        let navy = Color(red: 15/225, green: 34/255, blue: 116/225)
+        let navy = Color(red: 10/225, green: 20/255, blue: 60/225)
         NavigationStack {
             ZStack {
                 Image("BackgroundImage")
@@ -19,9 +19,10 @@ struct ContentView: View {
                 
                 VStack {
                     Text("Movie Tinder")
-                        .font(.system(size: 60, design: .serif))
+                        .font(.custom("ArialRoundedMTBold", size: 50))
                         .padding(.top, 60)
                         .frame(maxWidth: .infinity, alignment: .center)
+                        .foregroundColor(navy)
                     Spacer()
                     
                     NavigationLink{
@@ -36,7 +37,7 @@ struct ContentView: View {
                     }
                     label: {
                         Text("Pick a Movie")
-                            .font(.system(size: 30, weight: .bold, design: .default))
+                            .font(.custom("ArialRoundedMTBold", size: 30))
                             .padding()
                             .frame(width: 250, height: 100)
                             .background(navy)

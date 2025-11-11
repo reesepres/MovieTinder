@@ -12,7 +12,7 @@ struct NoMatch: View {
     let onExit: () -> Void
     
     var body: some View{
-        let navy = Color(red: 15/225, green: 34/255, blue: 116/225)
+        let navy = Color(red: 10/225, green: 20/255, blue: 60/225)
         ZStack{
             Image("NoMatchesBackground")
                 .resizable()
@@ -20,12 +20,15 @@ struct NoMatch: View {
                 .ignoresSafeArea()
             VStack{
                 Text("NO MATCHES!")
-                    .font(.system(size: 55, design: .serif))
+                    .font(.custom("ArialRoundedMTBold", size: 50))
                     .foregroundColor(navy)
-                    .padding(.top, 60)
+                    .padding(.top, 80)
                     .frame(maxWidth: .infinity, alignment: .center)
-                Button("Restart!", action: onRestart)
-                    .font(.headline)
+                    
+                Spacer()
+                
+                Button("Restart", action: onRestart)
+                    .font(.custom("ArialRoundedMTBold", size: 20))
                     .padding()
                     .frame(width: 220, height: 60)
                     .background(navy)
@@ -33,7 +36,7 @@ struct NoMatch: View {
                     .cornerRadius(12)
                 
                 Button("Exit", action: onExit)
-                    .font(.headline)
+                    .font(.custom("ArialRoundedMTBold", size: 20))
                     .padding()
                     .frame(width: 220, height: 60)
                     .background(navy)

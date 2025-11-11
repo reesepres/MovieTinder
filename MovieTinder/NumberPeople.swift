@@ -9,7 +9,7 @@ import SwiftUI
 struct NumberPeople: View {
     var onSelect: (Int) -> Void = { _ in }
     var body: some View {
-        let navy = Color(red: 15/225, green: 34/255, blue: 116/225)
+        let navy = Color(red: 10/225, green: 20/255, blue: 60/225)
         ZStack {
             Image("BackgroundImage")
                 .resizable()
@@ -18,13 +18,15 @@ struct NumberPeople: View {
            
             VStack {
                 Text("How many people")
-                    .font(.system(size: 40, design: .serif))
+                    .font(.custom("ArialRoundedMTBold", size: 40))
                     .padding(.top, 40)
                     .frame(maxWidth: .infinity, alignment: .center)
+                    .foregroundColor(navy)
                 Text("are watching?")
-                    .font(.system(size: 40, design: .serif))
+                    .font(.custom("ArialRoundedMTBold", size: 40))
                     .padding(.top, 0)
                     .frame(maxWidth: .infinity, alignment: .center)
+                    .foregroundColor(navy)
                 Spacer()
                     .navigationBarHidden(true)
                 

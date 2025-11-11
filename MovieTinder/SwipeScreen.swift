@@ -8,7 +8,11 @@ struct YesNoScreen: View {
     let movie: MovieListItem?
     var onVote: (Bool) -> Void
 
+    @State private var dragOffset: CGSize = .zero   // for swipe
+
     var body: some View {
+        let navy = Color(red: 10/225, green: 20/255, blue: 60/225)
+
         ZStack {
             backgroundColor.ignoresSafeArea()
 
@@ -44,7 +48,8 @@ struct YesNoScreen: View {
                         }
 
                         Text(movie?.title ?? "No movie available")
-                            .font(.system(size: 32, weight: .semibold, design: .serif))
+                            .font(.custom("ArialRoundedMTBold", size: 40))
+                            .foregroundColor(navy)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.horizontal)
                             .padding(.top, 8)
@@ -53,22 +58,22 @@ struct YesNoScreen: View {
                             ForEach(0..<Int(round(movie?.voteAverage ?? 0)) / 2, id: \.self) { _ in
                                 Image(systemName: "star.fill")
                                     .font(.title3)
-                                    .foregroundColor(.black)
+                                    .foregroundColor(navy)
                             }
-                            if(Int(round(movie?.voteAverage ?? 0)) % 2 != 0){
+                            if (Int(round(movie?.voteAverage ?? 0)) % 2 != 0) {
                                 Image(systemName: "star.leadinghalf.filled")
                                     .font(.title3)
-                                    .foregroundColor(.black)
-                                ForEach(0..<(4-Int(round((movie?.voteAverage ?? 0)))/2), id: \.self){ _ in
+                                    .foregroundColor(navy)
+                                ForEach(0..<(4 - Int(round((movie?.voteAverage ?? 0))) / 2), id: \.self) { _ in
                                     Image(systemName: "star")
                                         .font(.title3)
-                                        .foregroundColor(.black)
+                                        .foregroundColor(navy)
                                 }
                             } else {
-                                ForEach(0..<(5-Int(round((movie?.voteAverage ?? 0)))/2), id: \.self){ _ in
+                                ForEach(0..<(5 - Int(round((movie?.voteAverage ?? 0))) / 2), id: \.self) { _ in
                                     Image(systemName: "star")
                                         .font(.title3)
-                                        .foregroundColor(.black)
+                                        .foregroundColor(navy)
                                 }
                             }
                         }
@@ -76,29 +81,11 @@ struct YesNoScreen: View {
                         .padding(.horizontal)
 
                         Text(movie?.overview ?? "PG\nDescription:\nThis is where our description will go for each movie! ------------------------------------------------------------------------------")
-                            .font(.headline)
+                            .font(.custom("ArialRoundedMTBold", size: 15))
                             .multilineTextAlignment(.leading)
                             .padding(.horizontal)
-
-                        HStack(spacing: 90) {
-                            Button("No") { onVote(false) }
-                                .font(.title3.bold())
-                                .frame(width: 110, height: 80)
-                                .background(Color.red)
-                                .border(.black, width: 3.5)
-                                .cornerRadius(10)
-
-                            Button("Yes") { onVote(true) }
-                                .font(.title3.bold())
-                                .frame(width: 110, height: 80)
-                                .background(Color.green)
-                                .border(.black, width: 3.5)
-                                .cornerRadius(10)
-                        }
-                        .padding(.top, 16)
-                        .padding(.bottom, 60)
                     }
-                    .foregroundColor(.black)
+                    .foregroundColor(navy)
                     .padding(.top)
                 }
                 .onChange(of: index, initial: false) { _, _ in
@@ -108,22 +95,35 @@ struct YesNoScreen: View {
                 }
             }
         }
-    }
-}
+        
+        
+        .offset(x: dragOffset.width * 0.3)
+        .gesture(
+            DragGesture()
+                .onChanged { value in
+                    if abs(value.translation.width) > abs(value.translation.height) {
+                        dragOffset = value.translation
+                    }
+                }
+                .onEnded { value in
+                    let translation = value.translation
+                    let threshold: CGFloat = 120
 
-#Preview {
-    let mockMovies: [MovieListItem] = [
-        MovieListItem(
-            id: 1,
-            title: "Fight Club",
-            originalTitle: "Fight Club",
-            originalLanguage: "en",
-            overview: "A ticking-time-bomb insomniac and a soap salesman channel primal male aggression into a shocking new form of therapy. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis quis lorem et diam lobortis molestie. Suspendisse condimentum mauris at ultricies placerat. Maecenas maximus elit et augue condimentum aliquam. Suspendisse potenti. Fusce nec purus quis turpis consectetur bibendum a non ligula. Fusce faucibus aliquam aliquet. In rutrum nisl orci, eu fringilla elit mattis at. Fusce maximus fringilla nibh, nec viverra ipsum consectetur eget. Sed ac diam sit amet eros mattis rutrum eget at odio. Ut quam nulla, rutrum at ullamcorper a, sollicitudin eget elit. Praesent mollis tincidunt quam. Nam sagittis, eros ac iaculis tincidunt, odio massa scelerisque lectus, ut imperdiet ante lectus non turpis. Mauris laoreet augue quis dolor iaculis fringilla. Aliquam id tellus pulvinar, rutrum nibh eu, imperdiet purus. Vivamus eu arcu viverra, sagittis sem sed, aliquam quam. Quisque nec viverra arcu, in luctus felis.",
-            genreIDs: [18],
-            releaseDate: Date(timeIntervalSince1970: 937392000),
-            posterPath: nil,
-            voteAverage: 4.6
+                    if abs(translation.width) > abs(translation.height),
+                       abs(translation.width) > threshold {
+
+                        if translation.width > 0 {
+                            onVote(true)
+                        } else {
+                            onVote(false)
+                        }
+                    }
+
+                    // if it thinks its not a swipe it "springs" back
+                    withAnimation(.spring()) {
+                        dragOffset = .zero
+                    }
+                }
         )
-    ]
-    YesNoScreen(backgroundColor: .mint, index: 0, total: 10, movie: mockMovies.first) {_ in }
+    }
 }

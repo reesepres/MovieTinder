@@ -14,17 +14,19 @@ struct Match: View {
     let onExit: () -> Void
 
     var body: some View {
-        let navy = Color(red: 15/225, green: 34/255, blue: 116/225)
+        let navy = Color(red: 10/225, green: 20/255, blue: 60/225)
         ZStack {
             Image("MatchBackground")
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
+                .foregroundColor(navy)
 
             VStack(spacing: 20) {
                 Text("MATCH!")
-                    .font(.system(size: 60, design: .serif))
+                    .font(.custom("ArialRoundedMTBold", size: 60))
                     .padding(.top, 40)
+                    .foregroundColor(navy)
 //<<<<<<< Updated upstream
 //
 //                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w500/\(movie?.posterPath?.absoluteString ?? "")")) { phase in
@@ -83,22 +85,23 @@ struct Match: View {
 
                 // Title and Overview
                 Text(movie!.title)
-                    .font(.title)
+                    .font(.custom("ArialRoundedMTBold", size: 50))
                     .fontWeight(.bold)
                     .padding(.top, 8)
-                    .foregroundColor(.black)
+                    .foregroundColor(navy)
 
                 Text(movie!.overview)
-                    .font(.body)
+                    .font(.custom("ArialRoundedMTBold", size: 15))
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
-                    .foregroundColor(.black)
+                    .foregroundColor(navy)
+                
 
                 Spacer()
 
 //>>>>>>> Stashed changes
                 Button("All Done!", action: onExit)
-                    .font(.headline)
+                    .font(.custom("ArialRoundedMTBold", size: 30))
                     .padding()
                     .frame(width: 220, height: 60)
                     .background(navy)
@@ -119,7 +122,7 @@ struct Matches: View {
     let onExit: () -> Void
 
     var body: some View {
-        let navy = Color(red: 15/225, green: 34/255, blue: 116/225)
+        let navy = Color(red: 10/225, green: 20/255, blue: 60/225)
         ZStack {
             Image("MatchesBackground")
                 .resizable()
@@ -128,11 +131,11 @@ struct Matches: View {
 
             VStack(spacing: 20) {
                 Text("MATCHES")
-                    .font(.system(size: 42, design: .serif))
+                    .font(.custom("ArialRoundedMTBold", size: 50))
                     .fontWeight(.bold)
                     .multilineTextAlignment(.center)
                     .padding(.top, 30)
-                    .foregroundColor(.black)
+                    .foregroundColor(navy)
 
                 ScrollView {
                     LazyVStack(spacing: 25) {
@@ -166,15 +169,15 @@ struct Matches: View {
 
                                 // Movie title
                                 Text(movie.title)
-                                    .font(.title3.bold())
-                                    .foregroundColor(.black)
+                                    .font(.custom("ArialRoundedMTBold", size: 30))
+                                    .foregroundColor(navy)
                                     .multilineTextAlignment(.center)
                                     .frame(maxWidth: UIScreen.main.bounds.width * 0.85)
 
                                 // Overview text
                                 Text(movie.overview)
                                     .font(.footnote)
-                                    .foregroundColor(.black.opacity(0.8))
+                                    .foregroundColor(navy.opacity(0.8))
                                     .multilineTextAlignment(.center)
                                     .frame(maxWidth: UIScreen.main.bounds.width * 0.85)
                             }
@@ -189,7 +192,7 @@ struct Matches: View {
                 // Buttons
                 VStack(spacing: 15) {
                     Button("Run-Off", action: onRestart)
-                        .font(.headline)
+                        .font(.custom("ArialRoundedMTBold", size: 30))
                         .padding()
                         .frame(width: 220, height: 55)
                         .background(navy)
@@ -197,7 +200,7 @@ struct Matches: View {
                         .cornerRadius(12)
 
                     Button("All Done!", action: onExit)
-                        .font(.headline)
+                        .font(.custom("ArialRoundedMTBold", size: 30))
                         .padding()
                         .frame(width: 220, height: 55)
                         .background(navy)
@@ -207,7 +210,7 @@ struct Matches: View {
                     Button("Random!") {
                         // not implemented selection logic
                     }
-                    .font(.headline)
+                    .font(.custom("ArialRoundedMTBold", size: 30))
                     .padding()
                     .frame(width: 220, height: 55)
                     .background(navy)

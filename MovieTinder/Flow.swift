@@ -45,10 +45,14 @@ struct GameFlowView: View {
     var body: some View {
         switch stage {
         case .ready(let i):
-            FillerReadyScreen(player: players[i]) {
-                stage = .swipe(playerIndex: i, slide: 0)
-            }.navigationBarBackButtonHidden(true)
-
+            ReadyToPick(
+                player: players[i],
+                playerNumber: i + 1,
+                onStart: {
+                    stage = .swipe(playerIndex: i, slide: 0)
+                }
+                )
+            .navigationBarBackButtonHidden(true)
         case .swipe(let i, let slide):
             YesNoScreen(
                 backgroundColor: players[i].color,
@@ -132,44 +136,6 @@ struct GameFlowView: View {
             return .single(winners[0])
         default:
             return .multiple(winners)
-        }
-    }
-}
-
-private struct FillerReadyScreen: View {
-    let player: Player
-    var onStart: () -> Void
-
-    var body: some View {
-        ZStack {
-            Image("BackgroundImage")
-                .resizable()
-                .scaledToFill()
-                .ignoresSafeArea()
-
-            VStack(spacing: 40) {
-                Text("Movie Tinder")
-                    .font(.system(size: 60, design: .serif))
-                    .padding(.top, 60)
-
-                Spacer()
-
-                Button(action: onStart) {
-                    Text("I'm Ready to\nPick!")
-                        .font(.system(size: 35))
-                        .multilineTextAlignment(.center)
-                        .padding()
-                        .frame(width: 250, height: 150)
-                        .background(player.color)
-                        .foregroundColor(.black)
-                        .cornerRadius(12)
-                        .shadow(color: .black.opacity(0.6), radius: 12, x: 0, y: 6)
-                }
-
-                Spacer()
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding()
         }
     }
 }
