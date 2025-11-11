@@ -20,7 +20,6 @@ struct ContentView: View {
                 VStack {
                     Text("Movie Tinder")
                         .font(.system(size: 60, design: .serif))
-                        .foregroundColor(navy)
                         .padding(.top, 60)
                         .frame(maxWidth: .infinity, alignment: .center)
                     Spacer()
