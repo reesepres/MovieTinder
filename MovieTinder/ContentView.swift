@@ -70,7 +70,7 @@ struct ContentView: View {
             .sheet(isPresented: $showFilters) {
                 FilterView(filter: $filter) {
                     showFilters = false
-                }
+                }.interactiveDismissDisabled()
             }
             .navigationBarHidden(true)
         }
