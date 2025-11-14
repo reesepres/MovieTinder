@@ -107,7 +107,7 @@ struct YesNoScreen: View {
                 }
                 .onEnded { value in
                     let translation = value.translation
-                    let threshold: CGFloat = 120
+                    let threshold: CGFloat = 60
 
                     if abs(translation.width) > abs(translation.height),
                        abs(translation.width) > threshold {
