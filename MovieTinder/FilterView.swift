@@ -28,10 +28,10 @@ struct FilterView: View{
     @State private var showLanguageAlert: Bool = false
     
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Filters")
-                .font(.title)
-                .padding(.top)
+            VStack(spacing: 20) {
+                Text("Filters")
+                    .font(.title)
+                    .padding(.top)
             
             VStack {
                 Text("Minimum Rating")
@@ -44,21 +44,7 @@ struct FilterView: View{
                 Slider(value: $filter.maxRating, in: 0...10, step: 0.5)
                 Text("\(filter.maxRating, specifier: "%.1f")")
             }
-            
-            VStack {
-                Text("Start Year")
-                Stepper(value: $filter.startYear, in: 1900...2100) {
-                    Text("\(filter.startYear)")
-                }
-            }
-            
-            VStack {
-                Text("End Year")
-                Stepper(value: $filter.endYear, in: 1900...2100) {
-                    Text("\(filter.endYear)")
-                }
-            }
-            
+                
             VStack {
                 Text("Language (e.g. en, fr, es)")
                 TextField("Any Language OK", text: $filter.language)
@@ -68,33 +54,53 @@ struct FilterView: View{
                     .autocorrectionDisabled(true)
             }
             
+            VStack {
+                Picker("Start Year", selection: $filter.startYear) {
+                    ForEach((1900...2100), id: \.self) { year in
+                        Text("\(year)").tag(year)
+                    }
+                }
+                .pickerStyle(.wheel)
+                .frame(height: 120)
+            }
+            
+            VStack {
+                Picker("End Year", selection: $filter.endYear) {
+                    ForEach((1900...2100), id: \.self) { year in
+                        Text("\(year)").tag(year)
+                    }
+                }
+                .pickerStyle(.wheel)
+                .frame(height: 120)
+            }
+            
             Button("Done") {
-                            let trimmed = filter.language
-                                .trimmingCharacters(in: .whitespacesAndNewlines)
-                                .lowercased()
+                let trimmed = filter.language
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                    .lowercased()
 
-                            if trimmed.isEmpty {
-                                filter.language = ""
-                                onDone()
-                            } else {
-                                let isValidShape = trimmed.count == 2 && trimmed.allSatisfy { $0.isLetter }
-                                let isValidCode = isValidShape && acceptedLanguageCodes.contains(trimmed)
-                                if isValidCode {
-                                    filter.language = trimmed
-                                    onDone()
-                                } else {
-                                    showLanguageAlert = true
-                                }
-                            }
-                        }
-                        .font(.title2)
-                        .padding()
-        }
-        .padding()
-        .alert("Invalid language code", isPresented: $showLanguageAlert) {
-            Button("OK", role: .cancel) { }
-        } message: {
-            Text("You must enter a two-letter code like en, fr, es.")
+                if trimmed.isEmpty {
+                    filter.language = ""
+                    onDone()
+                } else {
+                    let isValidShape = trimmed.count == 2 && trimmed.allSatisfy { $0.isLetter }
+                    let isValidCode = isValidShape && acceptedLanguageCodes.contains(trimmed)
+                    if isValidCode {
+                        filter.language = trimmed
+                        onDone()
+                    } else {
+                        showLanguageAlert = true
+                    }
+                }
+            }
+            .font(.title2)
+            .padding()
+            }
+            .padding()
+            .alert("Invalid language code", isPresented: $showLanguageAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("You must enter a two-letter code like en, fr, es.")
         }
     }
 }
