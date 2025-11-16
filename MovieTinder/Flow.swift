@@ -1,20 +1,10 @@
 import SwiftUI
 import TMDb
 
-private enum Stage: Equatable {
-    case ready(playerIndex: Int)
-    case swipe(playerIndex: Int, slide: Int)
-    case done
-}
 
-private enum Outcome: Equatable {
-    case none //NoMatch
-    case single(MovieListItem) //Match
-    case multiple([MovieListItem])//Matches
-}
 
 private struct ResultsView: View {
-    let outcome: Outcome
+    let outcome: GameFlowView.ViewModel.Outcome
     let onRestart: () -> Void
     let onExit: () -> Void
     
@@ -32,119 +22,54 @@ private struct ResultsView: View {
 
 
 struct GameFlowView: View {
-    let players: [Player]
-    @State var movies: [MovieListItem]
-    private let totalSlides = 10
     
-    @State private var votes: [Int: [Bool]] = [:]
 
-    @State private var stage: Stage = .ready(playerIndex: 0)
-    @State private var currentMovieIndex = 0
+    @State private var viewModel : ViewModel
     @Environment(\.dismiss) private var dismiss
+    
+    init(players: [Player], movies: [MovieListItem]) {
+        _viewModel = State(initialValue: ViewModel(players: players, movies: movies))
+    }
+
 
     var body: some View {
-        switch stage {
-        case .ready(let i):
-            ReadyToPick(
-                player: players[i],
-                playerNumber: i + 1,
-                onStart: {
-                    stage = .swipe(playerIndex: i, slide: 0)
-                }
-                )
-            .navigationBarBackButtonHidden(true)
-        case .swipe(let i, let slide):
+        switch viewModel.stage {
+        case .ready(let playerIndex):
+            ReadyToPick(player: viewModel.players[playerIndex], playerNumber: playerIndex + 1 ) {
+                viewModel.start(for: playerIndex)
+            }.navigationBarBackButtonHidden(true)
+            
+        case .swipe(let playerIndex, let movieIndex):
             YesNoScreen(
-                backgroundColor: players[i].color,
-                index: slide,
-                total: movies.count,
-                movie: movies.indices.contains(currentMovieIndex) ? movies[currentMovieIndex] : nil,
+                backgroundColor: viewModel.players[playerIndex].color,
+                index: movieIndex,
+                total: viewModel.movies.count,
+                movie: viewModel.movies.indices.contains(viewModel.currentMovieIndex) ? viewModel.movies[viewModel.currentMovieIndex] : nil,
                 onVote: { liked in
-                    guard let movie = movies[safe: currentMovieIndex] else {return}
-                    recordVote(for: movie.id, liked: liked, playerIndex: i)
-                    let nextSlide = slide + 1
-                    currentMovieIndex = (currentMovieIndex+1) % movies.count
-                    if nextSlide < movies.count {
-                        stage = .swipe(playerIndex: i, slide: nextSlide)
-                    } else {
-                        let nextPlayer = i + 1
-                        stage = (nextPlayer < players.count)
-                            ? .ready(playerIndex: nextPlayer)
-                            : .done
+                    if let movie = viewModel.movies.indices.contains(viewModel.currentMovieIndex)
+                        ? viewModel.movies[viewModel.currentMovieIndex]
+                        : nil
+                    {
+                        viewModel.recordVote(for: movie.id, liked: liked, playerIndex: playerIndex)
                     }
+                    viewModel.advance(for: playerIndex, movieIndex: movieIndex)
                 }
-            ) .navigationBarBackButtonHidden(true)
+            )
+            .navigationBarBackButtonHidden(true)
 
         case .done:
-            let outcome = computeOutcome()
-
-                ResultsView(
-                    outcome: outcome,
-                    onRestart: {
-                        if case .multiple(let tiedMovies) = outcome, !tiedMovies.isEmpty {
-                            // Run-off only if we have movies to retry
-                            movies = tiedMovies
-                            votes.removeAll()
-                            currentMovieIndex = 0
-                            stage = .ready(playerIndex: 0)
-                        } else {
-                            // No movies left — go to NoMatch instead
-                            stage = .done
-                        }
-                    },
-                    onExit: {
-                        dismiss()
-                    }
-                ).navigationBarBackButtonHidden(true)
+                   ResultsView(
+                        outcome: viewModel.outcome,
+                        onRestart: viewModel.restart,
+                        onExit: {
+                           dismiss()
+                       }
+                   ).navigationBarBackButtonHidden(true)
                }
            }
-    //ALGORITHM GOES IN HERE!!!!!
-    private func recordVote(for movieID: Int, liked: Bool, playerIndex: Int){
-        if votes[movieID] == nil {
-            votes[movieID] = Array(repeating: false, count: players.count)
-        }
-        votes[movieID]?[playerIndex] = liked
-    }
-    private func placeholderOutcome(players: [Player], movies: [MovieListItem]) -> Outcome {
-            guard !movies.isEmpty else { return .none }
-            switch players.count % 3 {
-            case 0: return .none
-            case 1: return .single(movies[0])
-            default: return .multiple(Array(movies.prefix(min(5, movies.count))))
-            }
-        }
-    private func computeOutcome() -> Outcome {
-        // count how many "true" votes each movie got
-        let likeCountsByMovie: [Int: Int] = votes.mapValues { arr in
-            arr.filter { $0 }.count
-        }
-
-        // find the highest like count
-        let maxLikes = likeCountsByMovie.values.max()
-        if(maxLikes ?? 0 < 1){
-            return .none
-        }
-        // which movies hit that top score?
-        let winners = movies.filter { movie in
-            likeCountsByMovie[movie.id] == maxLikes
-        }
-
-        switch winners.count {
-        case 0:
-            return .none
-        case 1:
-            return .single(winners[0])
-        default:
-            return .multiple(winners)
-        }
-    }
+    
 }
 
-extension Array {
-    subscript(safe index: Int) -> Element? {
-        indices.contains(index) ? self[index] : nil
-    }
-}
 
 #Preview {
     let mockMovies: [MovieListItem] = [
@@ -170,6 +95,5 @@ extension Array {
             
         )
     ]
-    GameFlowView(players: makePlayers(count: 2), movies: mockMovies)
+    GameFlowView( players: makePlayers(count: 2), movies: mockMovies)
 }
-

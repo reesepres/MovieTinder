@@ -1,3 +1,7 @@
+//
+//  YesNoScreen.swift
+//
+
 import SwiftUI
 import TMDb
 
@@ -9,83 +13,31 @@ struct YesNoScreen: View {
     var onVote: (Bool) -> Void
 
     @State private var dragOffset: CGSize = .zero   // for swipe
+    
+    private let navy = Color(red: 10/225, green: 20/255, blue: 60/225)
 
     var body: some View {
-        let navy = Color(red: 10/225, green: 20/255, blue: 60/225)
-
         ZStack {
             backgroundColor.ignoresSafeArea()
 
             ScrollViewReader { proxy in
                 ScrollView {
                     VStack(spacing: 24) {
+                        
+                        // Scroll reset anchor
                         Color.clear
                             .frame(height: 0)
                             .id("top")
 
-                        AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w500/\(movie?.posterPath?.absoluteString ?? "")")) { phase in
-                            switch phase {
-                            case .empty:
-                                ProgressView()
-                                    .frame(height: 400)
-                            case .success(let image):
-                                image
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(maxWidth: 300)
-                                    .cornerRadius(20)
-                                    .shadow(radius: 10)
-                                    .padding(.horizontal)
-                            case .failure:
-                                Image(systemName: "photo")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 300)
-                                    .foregroundColor(.gray)
-                            @unknown default:
-                                EmptyView()
-                            }
+                        // MARK: - Poster Widget
+                        if let movie {
+                            MoviePosterCard(movie: movie)
+                        } else {
+                            Text("No movie available")
+                                .font(.custom("ArialRoundedMTBold", size: 30))
+                                .foregroundColor(navy)
                         }
-
-                        Text(movie?.title ?? "No movie available")
-                            .font(.custom("ArialRoundedMTBold", size: 40))
-                            .foregroundColor(navy)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.horizontal)
-                            .padding(.top, 8)
-
-                        HStack(spacing: 4) {
-                            ForEach(0..<Int(round(movie?.voteAverage ?? 0)) / 2, id: \.self) { _ in
-                                Image(systemName: "star.fill")
-                                    .font(.title3)
-                                    .foregroundColor(navy)
-                            }
-                            if (Int(round(movie?.voteAverage ?? 0)) % 2 != 0) {
-                                Image(systemName: "star.leadinghalf.filled")
-                                    .font(.title3)
-                                    .foregroundColor(navy)
-                                ForEach(0..<(4 - Int(round((movie?.voteAverage ?? 0))) / 2), id: \.self) { _ in
-                                    Image(systemName: "star")
-                                        .font(.title3)
-                                        .foregroundColor(navy)
-                                }
-                            } else {
-                                ForEach(0..<(5 - Int(round((movie?.voteAverage ?? 0))) / 2), id: \.self) { _ in
-                                    Image(systemName: "star")
-                                        .font(.title3)
-                                        .foregroundColor(navy)
-                                }
-                            }
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal)
-
-                        Text(movie?.overview ?? "PG\nDescription:\nThis is where our description will go for each movie! ------------------------------------------------------------------------------")
-                            .font(.custom("ArialRoundedMTBold", size: 15))
-                            .multilineTextAlignment(.leading)
-                            .padding(.horizontal)
                     }
-                    .foregroundColor(navy)
                     .padding(.top)
                 }
                 .onChange(of: index, initial: false) { _, _ in
@@ -95,35 +47,55 @@ struct YesNoScreen: View {
                 }
             }
         }
-        
-        
+
+        // MARK: - Swipe Logic
         .offset(x: dragOffset.width * 0.3)
         .gesture(
             DragGesture()
                 .onChanged { value in
+                    // only horizontal drags
                     if abs(value.translation.width) > abs(value.translation.height) {
                         dragOffset = value.translation
                     }
                 }
                 .onEnded { value in
                     let translation = value.translation
-                    let threshold: CGFloat = 120
+                    let threshold: CGFloat = 60
 
+                    // check swipe strength + direction
                     if abs(translation.width) > abs(translation.height),
                        abs(translation.width) > threshold {
 
                         if translation.width > 0 {
-                            onVote(true)
+                            onVote(true)   // SWIPE RIGHT
                         } else {
-                            onVote(false)
+                            onVote(false)  // SWIPE LEFT
                         }
                     }
 
-                    // if it thinks its not a swipe it "springs" back
                     withAnimation(.spring()) {
                         dragOffset = .zero
                     }
                 }
         )
     }
+}
+
+#Preview {
+    YesNoScreen(
+        backgroundColor: .blue,
+        index: 0,
+        total: 3,
+        movie: MovieListItem(
+            id: 1,
+            title: "Inception",
+            originalTitle: "Inception",
+            originalLanguage: "en",
+            overview: "dream dream dream",
+            genreIDs: [28],
+            releaseDate: .now,
+            posterPath: nil
+        ),
+        onVote: { _ in }
+    )
 }
