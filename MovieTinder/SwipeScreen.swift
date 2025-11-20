@@ -60,7 +60,7 @@ struct YesNoScreen: View {
                 }
                 .onEnded { value in
                     let translation = value.translation
-                    let threshold: CGFloat = 60
+                    let threshold: CGFloat = 30
 
                     // check swipe strength + direction
                     if abs(translation.width) > abs(translation.height),
