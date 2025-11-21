@@ -36,11 +36,11 @@ struct Carousel: View {
         ZStack {
             if !loopedMovies.isEmpty {
                 
-                GeometryReader { _ in
+                GeometryReader { wholeAnimation in
                     //width of each poster
                     let cardWidth: CGFloat = 260
                     //space between posters
-                    let spacing: CGFloat = 16
+                    let spacing: CGFloat = 10
                     let step = cardWidth + spacing
 
                     
@@ -59,8 +59,11 @@ struct Carousel: View {
                                 .allowsHitTesting(false)
                         }
                     }
-                    .frame(height: 360)
-                    .offset(x: -CGFloat(currentIndex) * step)
+                    //Centers Animation
+                    .offset(
+                            x: (wholeAnimation.size.width - cardWidth) / 2
+                               - CGFloat(currentIndex + middleStart) * step
+                        )
                 }
             }
         }
