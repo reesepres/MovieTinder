@@ -115,14 +115,5 @@ extension GameFlowView {
             }
         }
         
-        //ALGORITHM GOES IN HERE!!!!!
-        func placeholderOutcome() -> Outcome {
-                guard !movies.isEmpty else { return .none }
-                switch players.count % 3 {
-                case 0: return .none
-                case 1: return .single(movies[0])
-                default: return .multiple(Array(movies.prefix(min(5, movies.count))))
-                }
-            }
-    }
+        }
 }
