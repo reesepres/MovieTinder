@@ -46,7 +46,7 @@ struct MoviePosterCard: View {
             Text(displayTitle)
                 .font(.custom("ArialRoundedMTBold", size: 26))
                 .foregroundColor(navy)
-//                .multilineTextAlignment(.leading)
+                .multilineTextAlignment(.leading)
 
             // MARK: - Stars
             starRow
@@ -56,6 +56,7 @@ struct MoviePosterCard: View {
                 .font(.custom("ArialRoundedMTBold", size: 15))
                 .foregroundColor(navy)
                 .multilineTextAlignment(.leading)
+                
         }
         .padding()
     }

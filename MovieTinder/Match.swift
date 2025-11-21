@@ -55,47 +55,17 @@ struct Match: View {
 //                }
 //
 //=======
-
-                // Poster Image
-                if let poster = movie?.posterPath {
-                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w500/\(poster.absoluteString)")) { phase in
-                        switch phase {
-                        case .empty:
-                            ProgressView()
-                                .frame(height: 400)
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 300)
-                                .cornerRadius(20)
-                                .shadow(radius: 10)
-                                .padding(.horizontal)
-                        case .failure:
-                            Image(systemName: "photo")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 400)
-                                .foregroundColor(.gray)
-                        @unknown default:
-                            EmptyView()
-                        }
+                VStack(spacing: 24){
+                    if let movie {
+                        MoviePosterCard(movie: movie)
+                    } else {
+                        Text("No movie available")
+                            .font(.custom("ArialRoundedMTBold", size: 30))
+                            .foregroundColor(navy)
                     }
                 }
-
-                // Title and Overview
-                Text(movie!.title)
-                    .font(.custom("ArialRoundedMTBold", size: 50))
-                    .fontWeight(.bold)
-                    .padding(.top, 8)
-                    .foregroundColor(navy)
-
-                Text(movie!.overview)
-                    .font(.custom("ArialRoundedMTBold", size: 15))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal)
-                    .foregroundColor(navy)
-                
+                .padding(.top)
+                .frame(maxWidth: UIScreen.main.bounds.width)
 
                 Spacer()
 
@@ -114,6 +84,7 @@ struct Match: View {
         }
     }
 }
+
 
 // MARK: - Multiple Matches Screen
 struct Matches: View {
@@ -207,17 +178,16 @@ struct Matches: View {
                         .foregroundColor(.white)
                         .cornerRadius(12)
 
-                    Button("Random!") {
-                        // not implemented selection logic
+                    NavigationLink(destination: Match(movie: movies.randomElement(), onExit: onExit).navigationBarBackButtonHidden(true)) {
+                        Text("Random!")
+                            .font(.custom("ArialRoundedMTBold", size: 30))
+                            .padding()
+                            .frame(width: 220, height: 55)
+                            .background(navy)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
                     }
-                    .font(.custom("ArialRoundedMTBold", size: 30))
-                    .padding()
-                    .frame(width: 220, height: 55)
-                    .background(navy)
-                    .foregroundColor(.white)
-                    .cornerRadius(12)
                 }
-
                 Spacer(minLength: 20)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
