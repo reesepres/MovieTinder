@@ -108,57 +108,59 @@ struct Matches: View {
                     .padding(.top, 30)
                     .foregroundColor(navy)
 
-                ScrollView {
-                    LazyVStack(spacing: 25) {
-                        ForEach(movies, id: \.id) { movie in
-                            VStack(spacing: 10) {
-                                // Poster image with fixed aspect ratio
-                                if let poster = movie.posterPath {
-                                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w500/\(poster.absoluteString)")) { phase in
-                                        switch phase {
-                                        case .empty:
-                                            ProgressView()
-                                                .frame(height: 300)
-                                        case .success(let image):
-                                            image
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(maxWidth: UIScreen.main.bounds.width * 0.85)
-                                                .cornerRadius(16)
-                                                .shadow(radius: 8)
-                                        case .failure:
-                                            Image(systemName: "photo")
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(height: 300)
-                                                .foregroundColor(.gray)
-                                        @unknown default:
-                                            EmptyView()
-                                        }
-                                    }
-                                }
-
-                                // Movie title
-                                Text(movie.title)
-                                    .font(.custom("ArialRoundedMTBold", size: 30))
-                                    .foregroundColor(navy)
-                                    .multilineTextAlignment(.center)
-                                    .frame(maxWidth: UIScreen.main.bounds.width * 0.85)
-
-                                // Overview text
-                                Text(movie.overview)
-                                    .font(.footnote)
-                                    .foregroundColor(navy.opacity(0.8))
-                                    .multilineTextAlignment(.center)
-                                    .frame(maxWidth: UIScreen.main.bounds.width * 0.85)
-                            }
-                            .padding(.bottom, 10)
-                        }
-                    }
-                    .padding(.vertical, 20)
-                }
-
-                Spacer(minLength: 10)
+               Carousel(movies: movies)
+                
+//                ScrollView {
+//                    LazyVStack(spacing: 25) {
+//                        ForEach(movies, id: \.id) { movie in
+//                            VStack(spacing: 10) {
+//                                // Poster image with fixed aspect ratio
+//                                if let poster = movie.posterPath {
+//                                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w500/\(poster.absoluteString)")) { phase in
+//                                        switch phase {
+//                                        case .empty:
+//                                            ProgressView()
+//                                                .frame(height: 300)
+//                                        case .success(let image):
+//                                            image
+//                                                .resizable()
+//                                                .scaledToFit()
+//                                                .frame(maxWidth: UIScreen.main.bounds.width * 0.85)
+//                                                .cornerRadius(16)
+//                                                .shadow(radius: 8)
+//                                        case .failure:
+//                                            Image(systemName: "photo")
+//                                                .resizable()
+//                                                .scaledToFit()
+//                                                .frame(height: 300)
+//                                                .foregroundColor(.gray)
+//                                        @unknown default:
+//                                            EmptyView()
+//                                        }
+//                                    }
+//                                }
+//
+//                                // Movie title
+//                                Text(movie.title)
+//                                    .font(.custom("ArialRoundedMTBold", size: 30))
+//                                    .foregroundColor(navy)
+//                                    .multilineTextAlignment(.center)
+//                                    .frame(maxWidth: UIScreen.main.bounds.width * 0.85)
+//
+//                                // Overview text
+//                                Text(movie.overview)
+//                                    .font(.footnote)
+//                                    .foregroundColor(navy.opacity(0.8))
+//                                    .multilineTextAlignment(.center)
+//                                    .frame(maxWidth: UIScreen.main.bounds.width * 0.85)
+//                            }
+//                            .padding(.bottom, 10)
+//                        }
+//                    }
+//                    .padding(.vertical, 20)
+//                }
+//
+//                Spacer(minLength: 10)
 
                 // Buttons
                 VStack(spacing: 15) {
@@ -197,17 +199,30 @@ struct Matches: View {
 }
 
 #Preview {
-    Match(
-        movie: MovieListItem(
-            id: 1,
-            title: "Inception",
-            originalTitle: "Inception",
-            originalLanguage: "en",
-            overview: "A skilled thief uses dream-sharing technology to infiltrate targets' subconscious.",
-            genreIDs: [28, 878],
-            releaseDate: Date(timeIntervalSince1970: 1279257600),
-            posterPath: nil
-        ),
+    Matches(
+        movies: [
+            MovieListItem(
+                id: 1,
+                title: "Inception",
+                originalTitle: "Inception",
+                originalLanguage: "en",
+                overview: "A skilled thief uses dream-sharing technology to infiltrate targets' subconscious.",
+                genreIDs: [28, 878],
+                releaseDate: Date(timeIntervalSince1970: 1279257600),
+                posterPath: URL(string: "https://image.tmdb.org/t/p/w500//qwerty.jpg")
+            ),
+            MovieListItem(
+                id: 2,
+                title: "La La Land",
+                originalTitle: "La La Land",
+                originalLanguage: "en",
+                overview: "A jazz pianist and an aspiring actress pursue their dreams in Los Angeles.",
+                genreIDs: [35, 18, 10749],
+                releaseDate: Date(timeIntervalSince1970: 1481846400),
+                posterPath: URL(string: "https://image.tmdb.org/t/p/w500//asdfgh.jpg")
+            )
+        ],
+        onRestart: {},
         onExit: {}
     )
 }
