@@ -86,11 +86,18 @@ struct Match: View {
 }
 
 
+struct RandomMatch: Identifiable {
+    let id = UUID()
+    let movie: MovieListItem
+}
+
 // MARK: - Multiple Matches Screen
 struct Matches: View {
     let movies: [MovieListItem]
     let onRestart: () -> Void
     let onExit: () -> Void
+    
+    @State private var randomMatch: RandomMatch? = nil
 
     var body: some View {
         let navy = Color(red: 10/225, green: 20/255, blue: 60/225)
@@ -180,20 +187,28 @@ struct Matches: View {
                         .foregroundColor(.white)
                         .cornerRadius(12)
 
-                    NavigationLink(destination: Match(movie: movies.randomElement(), onExit: onExit).navigationBarBackButtonHidden(true)) {
-                        Text("Random!")
-                            .font(.custom("ArialRoundedMTBold", size: 30))
-                            .padding()
-                            .frame(width: 220, height: 55)
-                            .background(navy)
-                            .foregroundColor(.white)
-                            .cornerRadius(12)
+                    Button("Random"){
+                        if let movie = movies.randomElement() {
+                            randomMatch = RandomMatch(movie: movie)
+                        }
                     }
+                    .font(.custom("ArialRoundedMTBold", size: 30))
+                    .padding()
+                    .frame(width: 220, height: 55)
+                    .background(navy)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
                 }
                 Spacer(minLength: 20)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding(.horizontal)
+        }
+        .sheet(item: $randomMatch){ match in
+            Match(movie: match.movie, onExit: {
+                randomMatch = nil
+                onExit()
+            })
         }
     }
 }
