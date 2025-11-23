@@ -15,45 +15,84 @@ struct MovieFilter: Equatable {
     var language: String = ""
 }
 
-private let acceptedLanguageCodes: Set<String> = [
-    "en", "es", "fr", "de", "it", "pt", "ru", "ja", "ko", "zh",
-    "hi", "ar", "nl", "sv", "no", "da", "fi", "pl", "tr",
-    "he", "cs", "el", "hu", "th", "id", "ms", "ro", "sk",
-    "uk", "vi", "bg", "hr", "sr", "sl"
+private let languageOptions: [(name: String, code: String)] = [
+    ("Any Language", ""),
+    ("English", "en"),
+    ("Español", "es"),
+    ("Français", "fr"),
+    ("Deutsch", "de"),
+    ("Italiano", "it"),
+    ("Português", "pt"),
+    ("Русский", "ru"),
+    ("日本語", "ja"),
+    ("한국어", "ko"),
+    ("中文", "zh"),
+    ("हिन्दी", "hi"),
+    ("العربية", "ar"),
+    ("Nederlands", "nl"),
+    ("Svenska", "sv"),
+    ("Norsk", "no"),
+    ("Dansk", "da"),
+    ("Suomi", "fi"),
+    ("Polski", "pl"),
+    ("Türkçe", "tr"),
+    ("Ελληνικά", "el"),
+    ("Čeština", "cs"),
+    ("Magyar", "hu"),
+    ("ไทย", "th"),
+    ("Bahasa Indonesia", "id"),
+    ("Bahasa Melayu", "ms"),
+    ("Română", "ro"),
+    ("Slovenčina", "sk"),
+    ("Українська", "uk"),
+    ("Tiếng Việt", "vi"),
+    ("Български", "bg"),
+    ("Hrvatski", "hr"),
+    ("Српски", "sr"),
+    ("Slovenščina", "sl")
 ]
 
 struct FilterView: View{
     @Binding var filter: MovieFilter
     var onDone: () -> Void
     @State private var showLanguageAlert: Bool = false
-    
+
     var body: some View {
-            VStack(spacing: 20) {
-                Text("Filters")
-                    .font(.title)
-                    .padding(.top)
-                
+        VStack(spacing: 20) {
+            Text("Filters")
+                .font(.title)
+                .padding(.top)
+
             VStack {
                 Text("Minimum Rating")
                 Slider(value: $filter.minRating, in: 0...10, step: 0.5)
                 Text("\(filter.minRating, specifier: "%.1f")")
-            }.padding(.top)
-            
+            }
+            .padding(.top)
+
             VStack {
                 Text("Maximum Rating")
                 Slider(value: $filter.maxRating, in: 0...10, step: 0.5)
                 Text("\(filter.maxRating, specifier: "%.1f")")
             }
-                
+
             VStack {
-                Text("Language (e.g. en, fr, es)")
-                TextField("Any Language OK", text: $filter.language)
-                    .textFieldStyle(.roundedBorder)
-                    .frame(width: 150)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled(true)
+                Text("Change Language:")
+
+                let currentLanguageName =
+                    languageOptions.first(where: { $0.code == filter.language })?.name
+                    ?? "Any Language"
+
+                Menu(currentLanguageName) {
+                    ForEach(languageOptions.indices, id: \.self) { i in
+                        Button(languageOptions[i].name) {
+                            filter.language = languageOptions[i].code
+                        }
+                    }
+                }
+                .frame(height: 44)
             }
-                
+
             HStack{
                 VStack {
                     Picker("Start Year", selection: $filter.startYear) {
@@ -64,7 +103,9 @@ struct FilterView: View{
                     .pickerStyle(.wheel)
                     .frame(height: 120)
                 }
-                
+
+                Text("to")
+
                 VStack {
                     Picker("End Year", selection: $filter.endYear) {
                         ForEach((filter.startYear...2025), id: \.self) { year in
@@ -75,34 +116,13 @@ struct FilterView: View{
                     .frame(height: 120)
                 }
             }
-                
-            Button("Done") {
-                let trimmed = filter.language
-                    .trimmingCharacters(in: .whitespacesAndNewlines)
-                    .lowercased()
 
-                if trimmed.isEmpty {
-                    filter.language = ""
-                    onDone()
-                } else {
-                    let isValidShape = trimmed.count == 2 && trimmed.allSatisfy { $0.isLetter }
-                    let isValidCode = isValidShape && acceptedLanguageCodes.contains(trimmed)
-                    if isValidCode {
-                        filter.language = trimmed
-                        onDone()
-                    } else {
-                        showLanguageAlert = true
-                    }
-                }
+            Button("Done") {
+                onDone()
             }
             .font(.title2)
             .padding()
-            }
-            .padding()
-            .alert("Invalid language code", isPresented: $showLanguageAlert) {
-                Button("OK", role: .cancel) { }
-            } message: {
-                Text("You must enter a two-letter code like en, fr, es.")
         }
+        .padding()
     }
 }
