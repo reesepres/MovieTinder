@@ -11,7 +11,7 @@ struct MoviePosterCard: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(spacing: 12) {
 
             // MARK: - Poster
             AsyncImage(url: posterURL) { phase in
@@ -44,6 +44,7 @@ struct MoviePosterCard: View {
 
             // MARK: - Title
             Text(displayTitle)
+                .frame(width: 350 , alignment: .leading)
                 .font(.custom("ArialRoundedMTBold", size: 26))
                 .foregroundColor(navy)
                 .multilineTextAlignment(.leading)
@@ -53,6 +54,7 @@ struct MoviePosterCard: View {
 
             // MARK: - Overview
             Text(movie.overview)
+                .frame(width: 350)
                 .font(.custom("ArialRoundedMTBold", size: 15))
                 .foregroundColor(navy)
                 .multilineTextAlignment(.leading)
