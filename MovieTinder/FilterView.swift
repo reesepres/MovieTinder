@@ -11,7 +11,7 @@ struct MovieFilter: Equatable {
     var minRating: Double = 0
     var maxRating: Double = 10
     var startYear: Int = 1900
-    var endYear: Int = 2100
+    var endYear: Int = 2025
     var language: String = ""
 }
 
@@ -32,12 +32,12 @@ struct FilterView: View{
                 Text("Filters")
                     .font(.title)
                     .padding(.top)
-            
+                
             VStack {
                 Text("Minimum Rating")
                 Slider(value: $filter.minRating, in: 0...10, step: 0.5)
                 Text("\(filter.minRating, specifier: "%.1f")")
-            }
+            }.padding(.top)
             
             VStack {
                 Text("Maximum Rating")
@@ -53,27 +53,29 @@ struct FilterView: View{
                     .textInputAutocapitalization(.never)
                     .autocorrectionDisabled(true)
             }
-            
-            VStack {
-                Picker("Start Year", selection: $filter.startYear) {
-                    ForEach((1900...2100), id: \.self) { year in
-                        Text("\(year)").tag(year)
+                
+            HStack{
+                VStack {
+                    Picker("Start Year", selection: $filter.startYear) {
+                        ForEach((1900...filter.endYear), id: \.self) { year in
+                            Text("\(year)").tag(year)
+                        }
                     }
+                    .pickerStyle(.wheel)
+                    .frame(height: 120)
                 }
-                .pickerStyle(.wheel)
-                .frame(height: 120)
-            }
-            
-            VStack {
-                Picker("End Year", selection: $filter.endYear) {
-                    ForEach((1900...2100), id: \.self) { year in
-                        Text("\(year)").tag(year)
+                
+                VStack {
+                    Picker("End Year", selection: $filter.endYear) {
+                        ForEach((filter.startYear...2025), id: \.self) { year in
+                            Text("\(year)").tag(year)
+                        }
                     }
+                    .pickerStyle(.wheel)
+                    .frame(height: 120)
                 }
-                .pickerStyle(.wheel)
-                .frame(height: 120)
             }
-            
+                
             Button("Done") {
                 let trimmed = filter.language
                     .trimmingCharacters(in: .whitespacesAndNewlines)
