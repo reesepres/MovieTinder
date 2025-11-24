@@ -42,12 +42,14 @@ class TmdbApi: ObservableObject {
                     let year = Calendar.current.dateComponents([.year],
                                     from: movie.releaseDate ?? Date(timeIntervalSince1970: 0)).year ?? 0
                     let language = movie.originalLanguage
+                    let posterPath = movie.posterPath
 
                     return rating >= filter.minRating &&
                            rating <= filter.maxRating &&
                            year >= filter.startYear &&
                            year <= filter.endYear &&
-                           (filter.language.isEmpty || language == filter.language)
+                           (filter.language.isEmpty || language == filter.language) &&
+                           posterPath != nil
                 }
 
                 collected.append(contentsOf: filtered)
