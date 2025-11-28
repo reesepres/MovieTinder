@@ -14,33 +14,7 @@ struct MoviePosterCard: View {
         VStack(spacing: 12) {
 
             // MARK: - Poster
-            AsyncImage(url: posterURL) { phase in
-                switch phase {
-                case .empty:
-                    ProgressView()
-                        .frame(height: 300)
-
-                case .success(let image):
-                    image
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: 300)
-                        .cornerRadius(20)
-                        .shadow(radius: 10)
-                        .frame(maxWidth: .infinity, alignment: .center)
-
-                case .failure:
-                    Image(systemName: "photo")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 200)
-                        .foregroundColor(.gray)
-                        .frame(maxWidth: .infinity, alignment: .center)
-
-                @unknown default:
-                    EmptyView()
-                }
-            }
+            MoviePosterOnlyCard(movie: movie)
 
             // MARK: - Title
             Text(displayTitle)
@@ -51,6 +25,8 @@ struct MoviePosterCard: View {
 
             // MARK: - Stars
             starRow
+                .frame(width: 350, alignment: .leading)
+
 
             // MARK: - Overview
             Text(movie.overview)

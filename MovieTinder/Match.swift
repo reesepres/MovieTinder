@@ -98,6 +98,7 @@ struct Matches: View {
     let onExit: () -> Void
     
     @State private var randomMatch: RandomMatch? = nil
+    @State private var selectedMovie: MovieListItem? = nil   
 
     var body: some View {
         let navy = Color(red: 10/225, green: 20/255, blue: 60/225)
@@ -115,89 +116,27 @@ struct Matches: View {
                     .padding(.top, 30)
                     .foregroundColor(navy)
 
-               Carousel(movies: movies)
-                
-//                ScrollView {
-//                    LazyVStack(spacing: 25) {
-//                        ForEach(movies, id: \.id) { movie in
-//                            VStack(spacing: 10) {
-//                                // Poster image with fixed aspect ratio
-//                                if let poster = movie.posterPath {
-//                                    AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w500/\(poster.absoluteString)")) { phase in
-//                                        switch phase {
-//                                        case .empty:
-//                                            ProgressView()
-//                                                .frame(height: 300)
-//                                        case .success(let image):
-//                                            image
-//                                                .resizable()
-//                                                .scaledToFit()
-//                                                .frame(maxWidth: UIScreen.main.bounds.width * 0.85)
-//                                                .cornerRadius(16)
-//                                                .shadow(radius: 8)
-//                                        case .failure:
-//                                            Image(systemName: "photo")
-//                                                .resizable()
-//                                                .scaledToFit()
-//                                                .frame(height: 300)
-//                                                .foregroundColor(.gray)
-//                                        @unknown default:
-//                                            EmptyView()
-//                                        }
-//                                    }
-//                                }
-//
-//                                // Movie title
-//                                Text(movie.title)
-//                                    .font(.custom("ArialRoundedMTBold", size: 30))
-//                                    .foregroundColor(navy)
-//                                    .multilineTextAlignment(.center)
-//                                    .frame(maxWidth: UIScreen.main.bounds.width * 0.85)
-//
-//                                // Overview text
-//                                Text(movie.overview)
-//                                    .font(.footnote)
-//                                    .foregroundColor(navy.opacity(0.8))
-//                                    .multilineTextAlignment(.center)
-//                                    .frame(maxWidth: UIScreen.main.bounds.width * 0.85)
-//                            }
-//                            .padding(.bottom, 10)
-//                        }
-//                    }
-//                    .padding(.vertical, 20)
-//                }
-//
-//                Spacer(minLength: 10)
 
-                // Buttons
+                Carousel(
+                    movies: movies,
+                    onPosterTapped: { movie in
+                        selectedMovie = movie
+                    }
+                )
+                
                 VStack(spacing: 15) {
                     Button("Run-Off", action: onRestart)
-                        .font(.custom("ArialRoundedMTBold", size: 30))
-                        .padding()
-                        .frame(width: 220, height: 55)
-                        .background(navy)
-                        .foregroundColor(.white)
-                        .cornerRadius(12)
+                        .matchButtonStyle()
 
                     Button("All Done!", action: onExit)
-                        .font(.custom("ArialRoundedMTBold", size: 30))
-                        .padding()
-                        .frame(width: 220, height: 55)
-                        .background(navy)
-                        .foregroundColor(.white)
-                        .cornerRadius(12)
+                        .matchButtonStyle()
 
                     Button("Random"){
                         if let movie = movies.randomElement() {
                             randomMatch = RandomMatch(movie: movie)
                         }
                     }
-                    .font(.custom("ArialRoundedMTBold", size: 30))
-                    .padding()
-                    .frame(width: 220, height: 55)
-                    .background(navy)
-                    .foregroundColor(.white)
-                    .cornerRadius(12)
+                    .matchButtonStyle()
                 }
                 Spacer(minLength: 20)
             }
@@ -210,6 +149,28 @@ struct Matches: View {
                 onExit()
             })
         }
+
+        .sheet(item: $selectedMovie) { movie in
+            MoviePosterCard(movie: movie)
+        }
+    }
+}
+
+struct MatchButtonStyle : ViewModifier{
+    let color: Color = Color(red: 10/225, green: 20/255, blue: 60/225)
+    func body(content: Content) -> some View {
+        content
+        .font(.custom("ArialRoundedMTBold", size: 30))
+        .padding()
+        .frame(width: 290, height: 55)
+        .background(color)
+        .foregroundColor(.white)
+        .cornerRadius(12)
+    }
+}
+extension View {
+    func matchButtonStyle() -> some View {
+        self.modifier(MatchButtonStyle())
     }
 }
 

@@ -10,7 +10,8 @@ import TMDb
 
 struct MoviePosterOnlyCard: View {
     let movie: MovieListItem
-
+    private let navy = Color(red: 10/225, green: 20/255, blue: 60/225)
+    
     var body: some View {
         VStack(spacing: 0) {
             AsyncImage(url: posterURL) { phase in
@@ -40,6 +41,7 @@ struct MoviePosterOnlyCard: View {
                     EmptyView()
                 }
             }
+
         }
     }
 }

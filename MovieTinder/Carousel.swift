@@ -11,23 +11,30 @@ import Combine
 
 struct Carousel: View {
     let movies: [MovieListItem]
+    let onPosterTapped: (MovieListItem) -> Void
+
 
     @State private var currentIndex: Int = 0
+    @State private var autoScroll = true
 
-    //Scrolls every 3 seconds
+    @State private var dragOffset: CGFloat = 0
+    @State private var isDragging: Bool = false
+    @State private var lastDragValue: CGFloat = 0
+
+    // Scrolls every 3 seconds
     private let timer = Timer.publish(
         every: 3,
         on: .main,
         in: .common
     ).autoconnect()
 
-    //Loops the list
+    // Loops the list
     private var loopedMovies: [MovieListItem] {
         guard !movies.isEmpty else { return [] }
         return movies + movies + movies
     }
 
-    //Starts in the middle of the looped movies
+    // Starts in the middle
     private var middleStart: Int {
         movies.count
     }
@@ -35,35 +42,53 @@ struct Carousel: View {
     var body: some View {
         ZStack {
             if !loopedMovies.isEmpty {
-                
+
                 GeometryReader { wholeAnimation in
-                    //width of each poster
                     let cardWidth: CGFloat = 260
-                    //space between posters
                     let spacing: CGFloat = 10
                     let step = cardWidth + spacing
 
-                    
                     HStack(spacing: spacing) {
-                        
+
                         ForEach(loopedMovies.indices, id: \.self) { index in
-                            
+
                             MoviePosterOnlyCard(movie: loopedMovies[index])
-                                //Size of each poster
                                 .frame(width: cardWidth, height: 360)
-                                //Center card is larger and side cards are smaller
                                 .scaleEffect(index == currentIndex ? 1.0 : 0.9)
-                                //Side posters opacity
-                                .opacity(index == currentIndex ? 1.0 : 0.6)
-                                //Change this if we want to be able to tap and "open" the posters
-                                .allowsHitTesting(false)
+//                                .opacity(index == currentIndex ? 1.0 : 0.6)
+                                .onTapGesture {
+                                    autoScroll = false
+                                    onPosterTapped(loopedMovies[index])
+                                }
                         }
                     }
-                    //Centers Animation
                     .offset(
-                            x: (wholeAnimation.size.width - cardWidth) / 2
-                               - CGFloat(currentIndex + middleStart) * step
-                        )
+                        x: (wholeAnimation.size.width - cardWidth) / 2
+                            - CGFloat(currentIndex + middleStart) * step
+                    )
+                    .gesture(
+                        DragGesture()
+                            .onChanged { value in
+                                autoScroll = false
+                                isDragging = true
+                                dragOffset = value.translation.width
+                                lastDragValue = value.translation.width
+                            }
+                            .onEnded { value in
+                                isDragging = false
+                                let threshold: CGFloat = 80
+                                let translation = lastDragValue
+
+                                if translation < -threshold {
+                                    goToNext()
+                                } else if translation > threshold {
+                                    goToPrevious()
+                                }
+
+                                dragOffset = 0
+                                lastDragValue = 0
+                            }
+                    )
                 }
             }
         }
@@ -77,7 +102,7 @@ struct Carousel: View {
         }
 
         .onReceive(timer) { _ in
-            guard movies.count > 1 else { return }
+            guard movies.count > 1, autoScroll else { return }
             goToNext()
         }
 
@@ -86,14 +111,13 @@ struct Carousel: View {
         }
     }
 
-    //Scroll loops infinitly by snapping to middle
+    // Keeps the index in the loop
     private func normalizeIndexIfNeeded() {
         guard !movies.isEmpty else { return }
-        
+
         let n = movies.count
         let middleEnd = 2 * n - 1
 
-        //Make sure index is middle copy
         if currentIndex < middleStart || currentIndex > middleEnd {
             let logical = (currentIndex % n + n) % n
             let newIndex = middleStart + logical
@@ -101,47 +125,52 @@ struct Carousel: View {
         }
     }
 
-    //go to next movie poster
     private func goToNext() {
         withAnimation(.easeInOut(duration: 0.35)) {
             currentIndex += 1
         }
     }
+
+    private func goToPrevious() {
+        withAnimation(.easeInOut(duration: 0.35)) {
+            currentIndex -= 1
+        }
+    }
 }
 
-#Preview {
-    Carousel(
-        movies: [
-            MovieListItem(
-                id: 1,
-                title: "Inception",
-                originalTitle: "Inception",
-                originalLanguage: "en",
-                overview: "",
-                genreIDs: [],
-                releaseDate: .now,
-                posterPath: URL(string: "https://image.tmdb.org/t/p/w500/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg")
-            ),
-            MovieListItem(
-                id: 2,
-                title: "La La Land",
-                originalTitle: "La La Land",
-                originalLanguage: "en",
-                overview: "",
-                genreIDs: [],
-                releaseDate: .now,
-                posterPath: URL(string: "https://image.tmdb.org/t/p/w500/uDO8zWDhfWwoFdKS4fzkUJt0Rf0.jpg")
-            ),
-            MovieListItem(
-                id: 3,
-                title: "Interstellar",
-                originalTitle: "Interstellar",
-                originalLanguage: "en",
-                overview: "",
-                genreIDs: [],
-                releaseDate: .now,
-                posterPath: URL(string: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg")
-            )
-        ]
-    )
-}
+//#Preview {
+//    Carousel(
+//        movies: [
+//            MovieListItem(
+//                id: 1,
+//                title: "Inception",
+//                originalTitle: "Inception",
+//                originalLanguage: "en",
+//                overview: "",
+//                genreIDs: [],
+//                releaseDate: .now,
+//                posterPath: URL(string: "https://image.tmdb.org/t/p/w500/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg")
+//            ),
+//            MovieListItem(
+//                id: 2,
+//                title: "La La Land",
+//                originalTitle: "La La Land",
+//                originalLanguage: "en",
+//                overview: "",
+//                genreIDs: [],
+//                releaseDate: .now,
+//                posterPath: URL(string: "https://image.tmdb.org/t/p/w500/uDO8zWDhfWwoFdKS4fzkUJt0Rf0.jpg")
+//            ),
+//            MovieListItem(
+//                id: 3,
+//                title: "Interstellar",
+//                originalTitle: "Interstellar",
+//                originalLanguage: "en",
+//                overview: "",
+//                genreIDs: [],
+//                releaseDate: .now,
+//                posterPath: URL(string: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg")
+//            )
+//        ], onPosterTapped: <#(MovieListItem) -> Void#>
+//    )
+//}
