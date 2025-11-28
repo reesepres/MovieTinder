@@ -1,7 +1,7 @@
 import SwiftUI
 
 private let pink = Color(red: 225/225, green: 192/255, blue: 203/225)
-
+// testing Github Subscription to Slack
 struct Player: Identifiable {
     let id: Int
     let color: Color
