@@ -12,6 +12,9 @@ import TMDb
 struct Match: View {
     let movie: MovieListItem?
     let onExit: () -> Void
+    
+    @State private var showingAlert: Bool = false
+   
 
     var body: some View {
         let navy = Color(red: 10/225, green: 20/255, blue: 60/225)
@@ -27,34 +30,6 @@ struct Match: View {
                     .font(.custom("ArialRoundedMTBold", size: 60))
                     .padding(.top, 40)
                     .foregroundColor(navy)
-//<<<<<<< Updated upstream
-//
-//                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w500/\(movie?.posterPath?.absoluteString ?? "")")) { phase in
-//                    switch phase {
-//                    case .empty:
-//                        ProgressView()
-//                            .frame(height: 500)
-//                    case .success(let image):
-//                        image
-//                            .resizable()
-//                            .scaledToFit()
-//                            .frame(maxWidth: .infinity)
-//                            .cornerRadius(20)
-//                            .shadow(radius: 10)
-//                            .padding(.horizontal)
-//                    case .failure:
-//                        Image(systemName: "photo")
-//                            .resizable()
-//                            .scaledToFit()
-//                            .frame(maxHeight: 300, alignment: .center)
-//
-//                            .foregroundColor(.gray)
-//                    @unknown default:
-//                        EmptyView()
-//                    }
-//                }
-//
-//=======
                 VStack(spacing: 24){
                     if let movie {
                         MoviePosterCard(movie: movie)
@@ -69,15 +44,25 @@ struct Match: View {
 
                 Spacer()
 
-//>>>>>>> Stashed changes
-                Button("All Done!", action: onExit)
-                    .font(.custom("ArialRoundedMTBold", size: 30))
-                    .padding()
-                    .frame(width: 220, height: 60)
-                    .background(navy)
-                    .foregroundColor(.white)
-                    .cornerRadius(12)
-
+                Button("All Done!"){
+                    
+                    showingAlert = true
+                }
+                    .matchButtonStyle()
+                   .alert(isPresented: $showingAlert) {
+                       Alert(
+                           title: Text("Important Question"),
+                           message: Text("You will lose these results and start with different movies !"),
+                           primaryButton: .destructive(Text("All Done")) {
+                               // Action for "Delete"
+                               onExit()
+                           },
+                           secondaryButton: .cancel() {
+                               // Action for "Cancel"
+                               print("User cancelled.")
+                           }
+                       )
+                   }
                 Spacer(minLength: 40)
             }
             .padding()
@@ -97,13 +82,15 @@ struct Matches: View {
     let onRestart: () -> Void
     let onExit: () -> Void
     
+    
     @State private var randomMatch: RandomMatch? = nil
-    @State private var selectedMovie: MovieListItem? = nil   
+    @State private var selectedMovie: MovieListItem? = nil
+    @State private var showingAlert : Bool = false
 
     var body: some View {
         let navy = Color(red: 10/225, green: 20/255, blue: 60/225)
         ZStack {
-            Image("MatchesBackground")
+            Image("BackgroundImage")
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
@@ -123,21 +110,39 @@ struct Matches: View {
                         selectedMovie = movie
                     }
                 )
-                
-                VStack(spacing: 15) {
-                    Button("Run-Off", action: onRestart)
-                        .matchButtonStyle()
-
-                    Button("All Done!", action: onExit)
-                        .matchButtonStyle()
-
-                    Button("Random"){
-                        if let movie = movies.randomElement() {
-                            randomMatch = RandomMatch(movie: movie)
+                VStack(){
+                    HStack(spacing: 15) {
+                        Button("Run-Off", action: onRestart)
+                            .matchButtonStyle()
+                        Button("Random"){
+                            if let movie = movies.randomElement() {
+                                randomMatch = RandomMatch(movie: movie)
+                            }
                         }
-                    }
-                    .matchButtonStyle()
+                        .matchButtonStyle()
                 }
+                    Button("All Done!"){
+                        
+                        showingAlert = true
+                    }
+                        .matchButtonStyle()
+                       .alert(isPresented: $showingAlert) {
+                           Alert(
+                               title: Text("Important Question"),
+                               message: Text("You will lose these results and start with different movies !"),
+                               primaryButton: .destructive(Text("All Done")) {
+                                   // Action for "Delete"
+                                   onExit()
+                               },
+                               secondaryButton: .cancel() {
+                                   // Action for "Cancel"
+                                   print("User cancelled.")
+                               }
+                           )
+                       }
+
+                    
+                }.padding(45)
                 Spacer(minLength: 20)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -162,7 +167,7 @@ struct MatchButtonStyle : ViewModifier{
         content
         .font(.custom("ArialRoundedMTBold", size: 30))
         .padding()
-        .frame(width: 290, height: 55)
+        .frame(width: 170, height: 55)
         .background(color)
         .foregroundColor(.white)
         .cornerRadius(12)

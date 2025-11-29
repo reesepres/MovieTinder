@@ -54,7 +54,7 @@ struct Carousel: View {
 
                             MoviePosterOnlyCard(movie: loopedMovies[index])
                                 .frame(width: cardWidth, height: 360)
-                                .scaleEffect(index == currentIndex ? 1.0 : 0.9)
+                                .scaleEffect(index == currentIndex ? 1.7 : 1)
 //                                .opacity(index == currentIndex ? 1.0 : 0.6)
                                 .onTapGesture {
                                     autoScroll = false
@@ -138,39 +138,42 @@ struct Carousel: View {
     }
 }
 
-//#Preview {
-//    Carousel(
-//        movies: [
-//            MovieListItem(
-//                id: 1,
-//                title: "Inception",
-//                originalTitle: "Inception",
-//                originalLanguage: "en",
-//                overview: "",
-//                genreIDs: [],
-//                releaseDate: .now,
-//                posterPath: URL(string: "https://image.tmdb.org/t/p/w500/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg")
-//            ),
-//            MovieListItem(
-//                id: 2,
-//                title: "La La Land",
-//                originalTitle: "La La Land",
-//                originalLanguage: "en",
-//                overview: "",
-//                genreIDs: [],
-//                releaseDate: .now,
-//                posterPath: URL(string: "https://image.tmdb.org/t/p/w500/uDO8zWDhfWwoFdKS4fzkUJt0Rf0.jpg")
-//            ),
-//            MovieListItem(
-//                id: 3,
-//                title: "Interstellar",
-//                originalTitle: "Interstellar",
-//                originalLanguage: "en",
-//                overview: "",
-//                genreIDs: [],
-//                releaseDate: .now,
-//                posterPath: URL(string: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg")
-//            )
-//        ], onPosterTapped: <#(MovieListItem) -> Void#>
-//    )
-//}
+#Preview {
+    Carousel(
+        movies: [
+            MovieListItem(
+                id: 1,
+                title: "Inception",
+                originalTitle: "Inception",
+                originalLanguage: "en",
+                overview: "",
+                genreIDs: [],
+                releaseDate: .now,
+                posterPath: URL(string: "https://image.tmdb.org/t/p/w500/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg")
+            ),
+            MovieListItem(
+                id: 2,
+                title: "La La Land",
+                originalTitle: "La La Land",
+                originalLanguage: "en",
+                overview: "",
+                genreIDs: [],
+                releaseDate: .now,
+                posterPath: URL(string: "https://image.tmdb.org/t/p/w500/uDO8zWDhfWwoFdKS4fzkUJt0Rf0.jpg")
+            ),
+            MovieListItem(
+                id: 3,
+                title: "Interstellar",
+                originalTitle: "Interstellar",
+                originalLanguage: "en",
+                overview: "",
+                genreIDs: [],
+                releaseDate: .now,
+                posterPath: URL(string: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg")
+            )
+        ],
+        onPosterTapped: { movie in
+            print("Tapped: \(movie.title)")   // 👈 preview behavior
+        }
+    )
+}
