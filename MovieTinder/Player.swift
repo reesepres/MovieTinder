@@ -14,7 +14,8 @@ func makePlayers(count: Int) -> [Player] {
     let Color4 = Color(hex: "99E1D9")
     let Color5 = Color(hex: "90C2E7")
     
-    let colors: [Color] = [Color1, Color2, Color3, Color4, Color5, Color1, Color2,Color3]
+//    let colors: [Color] = [Color1, Color2, Color3, Color4, Color5, Color1, Color2,Color3]
+    let colors: [Color] = [.red, .blue, .green, .orange, .purple, .yellow, .teal, pink]
     return (0..<count).map { i in
         Player(id: i, color: colors[i % colors.count])
     }

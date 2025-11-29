@@ -54,7 +54,7 @@ struct Carousel: View {
 
                             MoviePosterOnlyCard(movie: loopedMovies[index])
                                 .frame(width: cardWidth, height: 360)
-                                .scaleEffect(index == currentIndex ? 1.7 : 1)
+//                                .scaleEffect(index == currentIndex ? 1.7 : 1)
 //                                .opacity(index == currentIndex ? 1.0 : 0.6)
                                 .onTapGesture {
                                     autoScroll = false
