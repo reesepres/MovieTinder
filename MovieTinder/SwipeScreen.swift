@@ -1,101 +1,125 @@
-//
-//  YesNoScreen.swift
-//
-
 import SwiftUI
 import TMDb
 
 struct YesNoScreen: View {
     let backgroundColor: Color
-    let index: Int
-    let total: Int
+    let index: Int           // current movie index (for "X of Y" if you want)
+    let total: Int           // total movies
     let movie: MovieListItem?
-    var onVote: (Bool) -> Void
-
-    @State private var dragOffset: CGSize = .zero   // for swipe
+    var onVote: (Bool) -> Void   // true = right swipe, false = left swipe
+    
+    @State private var dragOffset: CGSize = .zero
+    
+    // tweak these to feel like the example
+    private let swipeThreshold: CGFloat = 80       //how far you have to swipe
+    private let rotationFactor: CGFloat = 25       //how much the card tilts
+    private let flingDuration: Double = 0.4        //how long it takes to fling away
     
     private let navy = Color(red: 10/225, green: 20/255, blue: 60/225)
-
+    let maroon = Color(red: 90/255, green: 0/255, blue: 30/255)
+    
     var body: some View {
         ZStack {
-            backgroundColor.ignoresSafeArea()
-
-            ScrollViewReader { proxy in
-                ScrollView {
-                    VStack(spacing: 24) {
-                        
-                        // Scroll reset anchor
-                        Color.clear
-                            .frame(height: 0)
-                            .id("top")
-
-                        // MARK: - Poster Widget
-                        if let movie {
-                            MoviePosterCard(movie: movie)
-                        } else {
-                            Text("No movie available")
-                                .font(.custom("ArialRoundedMTBold", size: 30))
-                                .foregroundColor(navy)
-                        }
-                    }
-                    .padding(.top)
-                }
-                .onChange(of: index, initial: false) { _, _ in
-                    withAnimation(.easeInOut) {
-                        proxy.scrollTo("top", anchor: .top)
-                    }
+//            Image("BackgroundImage")
+//                .resizable()
+//                .scaledToFill()
+//                .ignoresSafeArea()
+            Color.white
+                .ignoresSafeArea()
+            
+            
+            VStack(spacing: 16) {
+                Text("Movie \(index + 1) of \(total)")
+                    .font(.custom("ArialRoundedMTBold", size: 18))
+                    .foregroundColor(navy.opacity(0.8))
+                
+                if let movie {
+                    //This is the card you swipe
+                    MoviePosterCard(movie: movie)
+                        .frame(maxWidth: 360)
+                        .padding()
+                        .background(backgroundColor)
+                        .cornerRadius(20)
+                        .shadow(color: shadowColorForDrag(),
+                                radius: 55,
+                                x: 0,
+                                y: 25)
+                        .offset(x: dragOffset.width,
+                                y: dragOffset.height * 0.1)
+                        .rotationEffect(
+                            .degrees(Double(dragOffset.width / rotationFactor))
+                        )
+                        .gesture(
+                            DragGesture()
+                                .onChanged { value in
+                                    //Horizontal Drags
+                                    if abs(value.translation.width) > abs(value.translation.height) {
+                                        dragOffset = value.translation
+                                    }
+                                }
+                                .onEnded { value in
+                                    let translation = value.translation
+                                    let isHorizontal =
+                                    abs(translation.width) > abs(translation.height)
+                                    let passedThreshold =
+                                    abs(translation.width) > swipeThreshold
+                                    
+                                    if isHorizontal && passedThreshold {
+                                        let swipedRight = translation.width > 0
+                                        let targetX: CGFloat = swipedRight ? 1000 : -1000
+                                        
+                                        //animate card flinging off-screen
+                                        withAnimation(.easeOut(duration: flingDuration)) {
+                                            dragOffset = CGSize(
+                                                width: targetX,
+                                                height: translation.height * 0.2
+                                            )
+                                        }
+                                        
+                                        //call onVote after the animation finishes
+                                        DispatchQueue.main.asyncAfter(
+                                            deadline: .now() + flingDuration
+                                        ) {
+                                            onVote(swipedRight)
+                                            dragOffset = .zero
+                                        }
+                                    } else {
+                                        //if the user doesn't swipe far enough then it goes back
+                                        withAnimation(.spring()) {
+                                            dragOffset = .zero
+                                        }
+                                    }
+                                }
+                        )
+                } else {
+                    Text("No movie available")
+                        .font(.custom("ArialRoundedMTBold", size: 24))
+                        .foregroundColor(navy)
                 }
             }
+            .padding()
         }
-
-        // MARK: - Swipe Logic
-        .offset(x: dragOffset.width * 0.3)
-        .gesture(
-            DragGesture()
-                .onChanged { value in
-                    // only horizontal drags
-                    if abs(value.translation.width) > abs(value.translation.height) {
-                        dragOffset = value.translation
-                    }
-                }
-                .onEnded { value in
-                    let translation = value.translation
-                    let threshold: CGFloat = 30
-
-                    // check swipe strength + direction
-                    if abs(translation.width) > abs(translation.height),
-                       abs(translation.width) > threshold {
-
-                        if translation.width > 0 {
-                            onVote(true)   // SWIPE RIGHT
-                        } else {
-                            onVote(false)  // SWIPE LEFT
-                        }
-                    }
-
-                    withAnimation(.spring()) {
-                        dragOffset = .zero
-                    }
-                }
-        )
     }
-}
-
-#Preview {
-    YesNoScreen(
-        backgroundColor: .blue,
-        index: 0,
-        total: 3,
-        movie: MovieListItem(
-            id: 1,
-            title: "Inception",
-            originalTitle: "Inception",
-            originalLanguage: "en",
-            overview: "dream dream dream",
-            genreIDs: [28],
-            releaseDate: .now,
-            posterPath: nil
-        ),
-        onVote: { _ in }
-    )
+    
+    
+    private func shadowColorForDrag() -> Color {
+        if dragOffset.width > 0 {
+            return Color.green.opacity(0.8)   //swiping right
+        } else if dragOffset.width < 0 {
+            //return maroon.opacity(0.8)     //swiping left
+            return Color.red.opacity(0.8)
+        } else {
+            return Color.gray.opacity(0.2)    //no swipe
+        }
+    }
+    private func highlightBorderColor() -> Color {
+        if dragOffset.width > 0 {
+            return Color.green.opacity(0.9)
+        } else if dragOffset.width < 0 {
+            //return maroon
+            return Color.red
+        } else {
+            return Color.clear
+        }
+    }
 }
