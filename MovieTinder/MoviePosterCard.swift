@@ -18,19 +18,19 @@ struct MoviePosterCard: View {
 
             // MARK: - Title
             Text(displayTitle)
-                .frame(width: 350 , alignment: .leading)
+                .frame(width: 300 , alignment: .leading)
                 .font(.custom("ArialRoundedMTBold", size: 26))
                 .foregroundColor(navy)
                 .multilineTextAlignment(.leading)
 
             // MARK: - Stars
             starRow
-                .frame(width: 350, alignment: .leading)
+                .frame(width: 300, alignment: .leading)
 
 
             // MARK: - Overview
             Text(movie.overview)
-                .frame(width: 350)
+                .frame(width: 300)
                 .font(.custom("ArialRoundedMTBold", size: 15))
                 .foregroundColor(navy)
                 .multilineTextAlignment(.leading)

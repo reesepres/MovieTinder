@@ -173,7 +173,7 @@ struct Carousel: View {
             )
         ],
         onPosterTapped: { movie in
-            print("Tapped: \(movie.title)")   // 👈 preview behavior
+            print("Tapped: \(movie.title)")
         }
     )
 }
