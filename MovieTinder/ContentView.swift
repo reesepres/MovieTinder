@@ -1,5 +1,6 @@
 import SwiftUI
 import TMDb
+import AVKit
 
 struct ContentView: View {
     
@@ -18,6 +19,7 @@ struct ContentView: View {
                     .resizable()
                     .scaledToFill()
                     .ignoresSafeArea()
+                
                 
                 VStack {
                     Text("Movie Tinder")

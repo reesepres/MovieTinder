@@ -25,10 +25,14 @@ struct YesNoScreen: View {
 //                .scaledToFill()
 //                .ignoresSafeArea()
 //                .opacity(0.5)
-            Color(hex: "F57C73")
+//            Color(hex: "F57C73")
+//                .ignoresSafeArea()
+            Color(hex: "FAE588")
                 .ignoresSafeArea()
                 .opacity(0.7)
-//
+//                .opacity(0.7)
+//            navy.opacity(0.4)
+//                .ignoresSafeArea()
             
             VStack(spacing: 16) {
                 Text("Movie \(index + 1) of \(total)")
@@ -107,7 +111,9 @@ struct YesNoScreen: View {
     
     private func shadowColorForDrag() -> Color {
         if dragOffset.width > 0 {
-            return Color(hex: "00ff00").opacity(0.8)  //swiping right
+//            return Color(hex: "00ff00").opacity(0.8)  //swiping right
+//            return Color(hex: "033500").opacity(0.8)  //swiping right
+            return Color.green.opacity(0.8)
         } else if dragOffset.width < 0 {
             //return maroon.opacity(0.8)     //swiping left
             return Color(hex: "FF2800").opacity(0.8)
@@ -117,7 +123,9 @@ struct YesNoScreen: View {
     }
     private func highlightBorderColor() -> Color {
         if dragOffset.width > 0 {
-            return Color(hex: "00ff00").opacity(0.8)
+//            return Color(hex: "00ff00").opacity(0.8)
+            return Color(hex: "033500").opacity(0.8)  //swiping right
+//            return Color.green.opacity(0.8)
         } else if dragOffset.width < 0 {
             //return maroon
             return Color(hex: "FF2800").opacity(0.8)
