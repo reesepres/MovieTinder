@@ -14,7 +14,7 @@ struct SwipingVideo: View {
     }
 }
 
-// SwiftUI wrapper
+//SwiftUI wrapper we need this because this is a view but if we want clean looping we need to use a UIViewRepresentable. I tried to just use the UIView only but I was struggling and using the wrapper was how I got it to work for now. We should look into a simpler way of doing this!
 private struct PlayerContainerView: UIViewRepresentable {
     func makeUIView(context: Context) -> PlayerUIView {
         PlayerUIView()
@@ -25,7 +25,6 @@ private struct PlayerContainerView: UIViewRepresentable {
     }
 }
 
-// Plain UIKit view that owns the AVPlayerLayer
 private final class PlayerUIView: UIView {
 
     private let playerLayer = AVPlayerLayer()
@@ -35,13 +34,13 @@ private final class PlayerUIView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        backgroundColor = .black
+        backgroundColor = .black //If it weren't to fill right this is the color that would show
 
-        // Load video from bundle
+        // Load video
         if let url = Bundle.main.url(forResource: "SwipingVideo", withExtension: "mov") {
             let item = AVPlayerItem(url: url)
 
-            // AVQueuePlayer + AVPlayerLooper = smooth looping
+            //Allows for looping
             let queuePlayer = AVQueuePlayer(playerItem: item)
             let looper = AVPlayerLooper(player: queuePlayer, templateItem: item)
 
@@ -52,10 +51,10 @@ private final class PlayerUIView: UIView {
             queuePlayer.play()
 
             playerLayer.player = queuePlayer
-            playerLayer.videoGravity = .resize // or .resizeAspectFit / .resizeAspectFill
+            playerLayer.videoGravity = .resize //makes it fit (there are other options to do this if we think it looks bad)
             layer.addSublayer(playerLayer)
         } else {
-            // Visible fallback if the file isn't found
+            //If it can't find or load the video for some reason
             backgroundColor = .red
             let label = UILabel()
             label.text = "Video not found"
@@ -76,7 +75,7 @@ private final class PlayerUIView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        // Make the video fill whatever SwiftUI frame we give it
+        //This is also to make sure the video fills the frame we gave it in ContentView
         playerLayer.frame = bounds
     }
 }
