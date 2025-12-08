@@ -4,14 +4,16 @@ import AVKit
 
 struct ContentView: View {
     
+    @State private var goToReady: Bool = false
+    @State private var players: [Player]? = nil
     @StateObject private var clientManager = TmdbApi()
+    @State private var movies: [MovieListItem] = []
     @State private var showFilters: Bool = false
     @State private var filter: MovieFilter = MovieFilter()
-    @State private var navigationPath = NavigationPath()
     
     var body: some View {
         let navy = Color(red: 10/225, green: 20/255, blue: 60/225)
-        NavigationStack(path: $navigationPath) {
+        NavigationStack {
             ZStack {
                 Image("BackgroundImage")
                     .resizable()
@@ -31,9 +33,17 @@ struct ContentView: View {
                     
                     Spacer()
                     
-                    Button {
-                        navigationPath.append("numberPeople")
-                    } label: {
+                    NavigationLink{
+                        NumberPeople { count in
+                            self.players = makePlayers(count: count)
+                            Task {
+                                await clientManager.fetchDiscoveredMovies(filteredBy: filter)
+                                self.goToReady = true
+//                                self.movies = clientManager.getMoviesFromCache(count: 10)
+                            }
+                        }
+                    }
+                    label: {
                         Text("Pick a Movie")
                             .font(.custom("ArialRoundedMTBold", size: 30))
                             .padding()
@@ -41,7 +51,9 @@ struct ContentView: View {
                             .background(navy)
                             .foregroundColor(.white)
                             .cornerRadius(12)
+                            //.padding(.horizontal,40)
                     }
+                    //.padding(.bottom, 10)
                     
                     Button {
                         showFilters = true
@@ -57,19 +69,8 @@ struct ContentView: View {
                     .padding(.bottom, 40)
                 }
                 .toolbar(.hidden, for: .navigationBar)
-                .navigationDestination(for: String.self) { destination in
-                    if destination == "numberPeople" {
-                        NumberPeople { count in
-                            navigationPath.append(count)
-                        }
-                    }
-                }
-                .navigationDestination(for: Int.self) { count in
-                    LoadingScreen(
-                        playerCount: count,
-                        filter: filter,
-                        clientManager: clientManager
-                    )
+                .navigationDestination(isPresented: $goToReady){
+                    LoadingScreen(playerCount: (players ?? []).count, filter: filter, clientManager: clientManager)
                 }
                 .sheet(isPresented: $showFilters){
                     FilterView(filter: $filter, onDone: {

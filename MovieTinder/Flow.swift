@@ -26,9 +26,11 @@ struct GameFlowView: View {
 
     @State private var viewModel : ViewModel
     @Environment(\.dismiss) private var dismiss
+    var onDone: () -> Void
     
-    init(players: [Player], movies: [MovieListItem]) {
+    init(players: [Player], movies: [MovieListItem], onDone: @escaping () -> Void) {
         _viewModel = State(initialValue: ViewModel(players: players, movies: movies))
+        self.onDone = onDone
     }
 
 
@@ -62,6 +64,7 @@ struct GameFlowView: View {
                         outcome: viewModel.outcome,
                         onRestart: viewModel.restart,
                         onExit: {
+                           onDone()
                            dismiss()
                        }
                    ).navigationBarBackButtonHidden(true)
@@ -95,5 +98,5 @@ struct GameFlowView: View {
             
         )
     ]
-    GameFlowView( players: makePlayers(count: 2), movies: mockMovies)
+    GameFlowView( players: makePlayers(count: 2), movies: mockMovies, onDone: {})
 }

@@ -14,6 +14,7 @@ struct LoadingScreen: View {
     let clientManager: TmdbApi
     
     @State private var isReady: Bool = false
+    @State private var isComplete: Bool = false
     @State private var movies: [MovieListItem] = []
     @State private var players: [Player] = []
     @Environment(\.dismiss) private var dismiss
@@ -53,10 +54,16 @@ struct LoadingScreen: View {
         }
         .navigationBarBackButtonHidden(true)
         .navigationDestination(isPresented: $isReady) {
-            GameFlowView(players: players, movies: movies)
+            GameFlowView(players: players, movies: movies, onDone:{
+                isComplete = true
+            })
         }
         .onAppear {
-            loadMovies()
+            if(!isComplete){
+                loadMovies()
+            } else{
+                dismiss()
+            }
         }
     }
     
