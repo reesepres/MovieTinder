@@ -20,7 +20,6 @@ struct ContentView: View {
                     .scaledToFill()
                     .ignoresSafeArea()
                 
-                
                 VStack(spacing: 10) {
                     Text("Movie Tinder")
                         .font(.custom("ArialRoundedMTBold", size: 50))
@@ -31,8 +30,6 @@ struct ContentView: View {
                     SwipingVideo()
                         .frame(width: 300, height:500)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
-                        //.padding(.horizontal, 20)
-                    //.padding(.top, )
                     
                     Spacer()
                     
@@ -41,8 +38,8 @@ struct ContentView: View {
                             self.players = makePlayers(count: count)
                             Task {
                                 await clientManager.fetchDiscoveredMovies(filteredBy: filter)
-                                self.movies = clientManager.discoveredMovies
                                 self.goToReady = true
+//                                self.movies = clientManager.getMoviesFromCache(count: 10)
                             }
                         }
                     }
@@ -58,7 +55,6 @@ struct ContentView: View {
                     }
                     //.padding(.bottom, 10)
                     
-                    
                     Button {
                         showFilters = true
                     } label: {
@@ -71,21 +67,26 @@ struct ContentView: View {
                             .cornerRadius(12)
                     }
                     .padding(.bottom, 40)
-                    }
+                }
                 .toolbar(.hidden, for: .navigationBar)
                 .navigationDestination(isPresented: $goToReady){
-                    GameFlowView(players: players ?? [], movies: movies)
+                    LoadingScreen(playerCount: (players ?? []).count, filter: filter, clientManager: clientManager)
                 }
                 .sheet(isPresented: $showFilters){
-                    FilterView(filter: $filter) {
+                    FilterView(filter: $filter, onDone: {
                         showFilters = false
-                    }
+                    }, clientManager: clientManager)
                     .navigationBarHidden(true)
                 }
-                }
+            }
+            .onAppear {
+                // Start preloading movies when app opens
+                clientManager.startPreloadingMovies(filter: filter)
             }
         }
     }
+}
+
 #Preview {
     ContentView()
 }

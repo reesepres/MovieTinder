@@ -55,6 +55,7 @@ private let languageOptions: [(name: String, code: String)] = [
 struct FilterView: View{
     @Binding var filter: MovieFilter
     var onDone: () -> Void
+    @ObservedObject var clientManager: TmdbApi
     @State private var showLanguageAlert: Bool = false
 
     var body: some View {
@@ -65,14 +66,38 @@ struct FilterView: View{
 
             VStack {
                 Text("Minimum Rating")
-                Slider(value: $filter.minRating, in: 0...10, step: 0.5)
+                Slider(value: Binding(
+                    get: { filter.minRating },
+                    set: { newValue in
+                        // Round to nearest 0.5
+                        let stepped = (newValue * 2).rounded() / 2
+
+                        // If stepping beyond max - 1, push max up
+                        if stepped + 1 > filter.maxRating {
+                            filter.maxRating = stepped + 1
+                        }
+
+                        filter.minRating = stepped
+                    }
+                ), in: 0...9.0, step: 0.5)
                 Text("\(filter.minRating, specifier: "%.1f")")
             }
-            .padding(.top)
 
             VStack {
                 Text("Maximum Rating")
-                Slider(value: $filter.maxRating, in: 0...10, step: 0.5)
+                Slider(value: Binding(
+                    get: { filter.maxRating },
+                    set: { newValue in
+                        let stepped = (newValue * 2).rounded() / 2
+
+                        // If stepping below min + 1, push min down
+                        if stepped - 1 < filter.minRating {
+                            filter.minRating = stepped - 1
+                        }
+
+                        filter.maxRating = stepped
+                    }
+                ), in: 1...10.0, step: 0.5)
                 Text("\(filter.maxRating, specifier: "%.1f")")
             }
 
@@ -116,6 +141,30 @@ struct FilterView: View{
                     .frame(height: 120)
                 }
             }
+            
+            // Display available movie count
+            HStack {
+                if clientManager.isLoading {
+                    ProgressView()
+                        .scaleEffect(0.8)
+                    Text("Loading movies...")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                } else if clientManager.availableMovieCount > 0 {
+                    Image(systemName: "film")
+                        .foregroundColor(.green)
+                    Text("\(clientManager.availableMovieCount) movies available")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                } else {
+                    Image(systemName: "exclamationmark.triangle")
+                        .foregroundColor(.orange)
+                    Text("Loading movie count...")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
+            .padding(.vertical, 8)
 
             Button("Done") {
                 onDone()
@@ -124,5 +173,9 @@ struct FilterView: View{
             .padding()
         }
         .padding()
+        .onChange(of: filter) { oldValue, newValue in
+            // Restart preloading when filter changes
+            clientManager.startPreloadingMovies(filter: newValue)
+        }
     }
 }
