@@ -8,14 +8,14 @@ struct Player: Identifiable {
 }
 
 func makePlayers(count: Int) -> [Player] {
-    let Color1 = Color(hex: "FBA8B6") //orangish-pink
-    let Color2 = Color(hex: "C7DEFA") //BLUE
-    let Color3 = Color(hex: "CF9BDD") //DARK PURPLE
-    let Color4 = Color(hex: "FFD6AE") //CREAMY PEACH
-    let Color5 = Color(hex: "FFD9F2") //ROSEWATER GLOW
-    let Color6 = Color(hex: "A2E4E2") //SEAFOAM MIST
-    let Color7 = Color(hex: "E6CCFF") //LAVENDAR COTTON
-    let Color8 = Color(hex: "FFCC99") //PASTEL SUNSET
+    let Color1 = Color(hex: "C2F0FF") //Light Blue
+    let Color2 = Color(hex: "A1E4FF") //BLUE  89D1FF
+    let Color3 = Color(hex: "8AB8E6") //CREAMY PEACH 8AB8E6
+    let Color4 = Color(hex: "89D1FF") //DARK PURPLE 4AA6FF
+    let Color5 = Color(hex: "4AA6FF") //SEAFOAM MIST
+    let Color6 = Color(hex: "5C93C9") //ROSEWATER GLOW 5C93C9
+    let Color7 = Color(hex: "3294F2") //LAVENDAR COTTON
+    let Color8 = Color(hex: "267BE5") //PASTEL SUNSET
     let colors: [Color] = [Color1, Color2, Color3, Color4, Color5, Color6, Color7,Color8]
 //    let colors: [Color] = [.red, .blue, .green, .orange, .purple, .yellow, .teal, pink]
     return (0..<count).map { i in
