@@ -41,7 +41,7 @@ struct YesNoScreen: View {
                 
                 if let movie {
                     //This is the card you swipe
-                    MoviePosterCard(movie: movie)
+                    DetailedPosterCard(movie: movie)
                         .frame(maxWidth: 300)
                         .padding()
                         .background(backgroundColor)
