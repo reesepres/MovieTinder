@@ -2,7 +2,7 @@ import SwiftUI
 import TMDb
 import AVKit
 
-struct ContentView: View {
+struct Main: View {
     
     @State private var goToReady: Bool = false
     @State private var players: [Player]? = nil
@@ -89,5 +89,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    Main()
 }

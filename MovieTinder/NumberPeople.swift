@@ -29,7 +29,7 @@ struct NumberPeople: View {
                     .frame(maxWidth: .infinity, alignment: .center)
                     .foregroundColor(navy)
                 Spacer()
-                    .navigationBarHidden(true)
+                    .navigationBarHidden(false)
                 
                 LazyVGrid(
                     columns: Array(repeating: GridItem(.fixed(150), spacing: 20), count: 2), spacing: 20)

@@ -1,7 +1,7 @@
 import SwiftUI
 import TMDb
 
-struct MoviePosterCard: View {
+struct DetailedPosterCard: View {
     let movie: MovieListItem
     private let navy = Color(red: 10/225, green: 20/255, blue: 60/225)
 
@@ -14,7 +14,7 @@ struct MoviePosterCard: View {
         VStack(spacing: 12) {
 
             // MARK: - Poster
-            MoviePosterOnlyCard(movie: movie)
+            PosterCard(movie: movie)
 
             // MARK: - Title
             Text(displayTitle)
@@ -41,7 +41,7 @@ struct MoviePosterCard: View {
 }
 
 // MARK: - Helpers
-extension MoviePosterCard {
+extension DetailedPosterCard {
     private var posterURL: URL? {
         if let path = movie.posterPath?.absoluteString {
             return URL(string: "https://image.tmdb.org/t/p/w500/\(path)")

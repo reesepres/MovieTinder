@@ -44,6 +44,7 @@ struct ReadyToPick: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding()
+            
         }
     }
 }

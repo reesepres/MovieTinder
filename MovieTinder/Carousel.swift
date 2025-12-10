@@ -13,7 +13,6 @@ struct Carousel: View {
     let movies: [MovieListItem]
     let onPosterTapped: (MovieListItem) -> Void
 
-
     @State private var currentIndex: Int = 0
     @State private var autoScroll = true
 
@@ -34,7 +33,7 @@ struct Carousel: View {
         return movies + movies + movies
     }
 
-    // Starts in the middle
+    // Start of the middle set
     private var middleStart: Int {
         movies.count
     }
@@ -49,13 +48,9 @@ struct Carousel: View {
                     let step = cardWidth + spacing
 
                     HStack(spacing: spacing) {
-
                         ForEach(loopedMovies.indices, id: \.self) { index in
-
-                            MoviePosterOnlyCard(movie: loopedMovies[index])
+                            PosterCard(movie: loopedMovies[index])
                                 .frame(width: cardWidth, height: 360)
-//                                .scaleEffect(index == currentIndex ? 1.7 : 1)
-//                                .opacity(index == currentIndex ? 1.0 : 0.6)
                                 .onTapGesture {
                                     autoScroll = false
                                     onPosterTapped(loopedMovies[index])
@@ -64,7 +59,8 @@ struct Carousel: View {
                     }
                     .offset(
                         x: (wholeAnimation.size.width - cardWidth) / 2
-                            - CGFloat(currentIndex + middleStart) * step
+                            - CGFloat(currentIndex) * step
+                            + dragOffset    
                     )
                     .gesture(
                         DragGesture()
@@ -76,16 +72,21 @@ struct Carousel: View {
                             }
                             .onEnded { value in
                                 isDragging = false
-                                let threshold: CGFloat = 80
-                                let translation = lastDragValue
 
-                                if translation < -threshold {
-                                    goToNext()
-                                } else if translation > threshold {
-                                    goToPrevious()
+                                let threshold: CGFloat = 80
+                                let translation = value.translation.width
+
+                                withAnimation(.easeInOut(duration: 0.25)) {
+
+                                    if translation < -threshold {
+                                        currentIndex += 1       // animate to next
+                                    } else if translation > threshold {
+                                        currentIndex -= 1       // animate to previous
+                                    }
+
+                                    dragOffset = 0              // animate back to center
                                 }
 
-                                dragOffset = 0
                                 lastDragValue = 0
                             }
                     )
@@ -97,6 +98,7 @@ struct Carousel: View {
 
         .onAppear {
             if !movies.isEmpty {
+                // Start at the beginning of the MIDDLE set
                 currentIndex = middleStart
             }
         }
@@ -111,17 +113,22 @@ struct Carousel: View {
         }
     }
 
-    // Keeps the index in the loop
+    // Keeps the index in the middle (second) set
+    // For n = 3:
+    //   allowed indices: 3, 4, 5
+    //   if we go to 6, 7, 8 → wrap back to 3, 4, 5
     private func normalizeIndexIfNeeded() {
         guard !movies.isEmpty else { return }
 
         let n = movies.count
-        let middleEnd = 2 * n - 1
+        let allowedStart = n          // start of middle set
+        let allowedEnd = 2 * n - 1    // end of middle set
 
-        if currentIndex < middleStart || currentIndex > middleEnd {
-            let logical = (currentIndex % n + n) % n
-            let newIndex = middleStart + logical
-            currentIndex = newIndex
+        if currentIndex < allowedStart || currentIndex > allowedEnd {
+            // Map currentIndex back into [allowedStart, allowedEnd]
+            let logical = (currentIndex - allowedStart) % n
+            let normalizedLogical = (logical + n) % n   // safe modulo for negatives
+            currentIndex = allowedStart + normalizedLogical
         }
     }
 
