@@ -20,16 +20,16 @@ struct YesNoScreen: View {
     
     var body: some View {
         ZStack {
-//            Image("BackgroundImage")
-//                .resizable()
-//                .scaledToFill()
-//                .ignoresSafeArea()
-//                .opacity(0.5)
+            Image("BackgroundImage")
+                .resizable()
+                .scaledToFill()
+                .ignoresSafeArea()
+                .opacity(0.65)
 //            Color(hex: "F57C73")
 //                .ignoresSafeArea()
-            Color(hex: "FAE588")
-                .ignoresSafeArea()
-                .opacity(0.7)
+//            Color(hex: "FAE588")
+//                .ignoresSafeArea()
+//                .opacity(0.7)
 //                .opacity(0.7)
 //            navy.opacity(0.4)
 //                .ignoresSafeArea()
@@ -47,7 +47,7 @@ struct YesNoScreen: View {
                         .background(backgroundColor)
                         .cornerRadius(20)
                         .shadow(color: shadowColorForDrag(),
-                                radius: 55,
+                                radius: 25,
                                 x: 0,
                                 y: 25)
                         .offset(x: dragOffset.width,
@@ -113,22 +113,22 @@ struct YesNoScreen: View {
         if dragOffset.width > 0 {
 //            return Color(hex: "00ff00").opacity(0.8)  //swiping right
 //            return Color(hex: "033500").opacity(0.8)  //swiping right
-            return Color.green.opacity(0.8)
+            return Color.green.opacity(1.0)
         } else if dragOffset.width < 0 {
             //return maroon.opacity(0.8)     //swiping left
-            return Color(hex: "FF2800").opacity(0.8)
+            return Color(hex: "FF2800").opacity(1.0)
         } else {
-            return Color.gray.opacity(0.2)    //no swipe
+            return Color.clear    //no swipe
         }
     }
     private func highlightBorderColor() -> Color {
         if dragOffset.width > 0 {
 //            return Color(hex: "00ff00").opacity(0.8)
-            return Color(hex: "033500").opacity(0.8)  //swiping right
+            return Color(hex: "033500").opacity(1.0)  //swiping right
 //            return Color.green.opacity(0.8)
         } else if dragOffset.width < 0 {
             //return maroon
-            return Color(hex: "FF2800").opacity(0.8)
+            return Color(hex: "FF2800").opacity(1.0)
         } else {
             return Color.clear
         }
