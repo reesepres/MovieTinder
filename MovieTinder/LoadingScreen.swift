@@ -71,7 +71,7 @@ struct LoadingScreen: View {
         players = makePlayers(count: playerCount)
         
         Task {
-            let moviesNeeded = playerCount * 10
+            let moviesNeeded = 10
             
             // Wait for minimum movies needed
             await clientManager.waitForMinimumMovies(count: moviesNeeded)
