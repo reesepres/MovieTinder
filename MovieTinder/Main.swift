@@ -2,7 +2,7 @@ import SwiftUI
 import TMDb
 import AVKit
 
-struct ContentView: View {
+struct Main: View {
     
     @State private var goToReady: Bool = false
     @State private var players: [Player]? = nil
@@ -15,10 +15,13 @@ struct ContentView: View {
         let navy = Color(red: 10/225, green: 20/255, blue: 60/225)
         NavigationStack {
             ZStack {
-                Image("BackgroundImage")
-                    .resizable()
-                    .scaledToFill()
+//                Image("BackgroundImage")
+//                    .resizable()
+//                    .scaledToFill()
+//                    .ignoresSafeArea()
+                Color(hex: "FAE588")
                     .ignoresSafeArea()
+                    .opacity(0.7)
                 
                 VStack(spacing: 10) {
                     Text("Movie Tinder")
@@ -88,5 +91,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    Main()
 }
