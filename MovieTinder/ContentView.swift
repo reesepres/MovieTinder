@@ -19,11 +19,12 @@ struct ContentView: View {
                     .resizable()
                     .scaledToFill()
                     .ignoresSafeArea()
+                    .opacity(0.72)
                 
                 VStack(spacing: 10) {
                     Text("Movie Tinder")
                         .font(.custom("ArialRoundedMTBold", size: 50))
-                        .padding(.top, 60)
+                        .padding(.top, 70)
                         .frame(maxWidth: .infinity, alignment: .center)
                         .foregroundColor(navy)
                     
@@ -47,7 +48,7 @@ struct ContentView: View {
                         Text("Pick a Movie")
                             .font(.custom("ArialRoundedMTBold", size: 30))
                             .padding()
-                            .frame(width: 250, height: 100)
+                            .frame(width: 250, height: 80)
                             .background(navy)
                             .foregroundColor(.white)
                             .cornerRadius(12)
