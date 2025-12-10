@@ -15,18 +15,16 @@ struct Main: View {
         let navy = Color(red: 10/225, green: 20/255, blue: 60/225)
         NavigationStack {
             ZStack {
-//                Image("BackgroundImage")
-//                    .resizable()
-//                    .scaledToFill()
-//                    .ignoresSafeArea()
-                Color(hex: "FAE588")
+                Image("BackgroundImage")
+                    .resizable()
+                    .scaledToFill()
                     .ignoresSafeArea()
-                    .opacity(0.7)
+                    .opacity(0.72)
                 
                 VStack(spacing: 10) {
                     Text("Movie Tinder")
                         .font(.custom("ArialRoundedMTBold", size: 50))
-                        .padding(.top, 60)
+                        .padding(.top, 70)
                         .frame(maxWidth: .infinity, alignment: .center)
                         .foregroundColor(navy)
                     
@@ -50,7 +48,7 @@ struct Main: View {
                         Text("Pick a Movie")
                             .font(.custom("ArialRoundedMTBold", size: 30))
                             .padding()
-                            .frame(width: 250, height: 100)
+                            .frame(width: 250, height: 80)
                             .background(navy)
                             .foregroundColor(.white)
                             .cornerRadius(12)

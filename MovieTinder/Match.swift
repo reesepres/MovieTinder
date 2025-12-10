@@ -52,7 +52,7 @@ struct Match: View {
                    .alert(isPresented: $showingAlert) {
                        Alert(
                            title: Text("Important Question"),
-                           message: Text("You will lose these results and start with different movies !"),
+                           message: Text("Return to home screen? You'll lose current results!"),
                            primaryButton: .destructive(Text("All Done")) {
                                // Action for "Delete"
                                onExit()
@@ -69,4 +69,3 @@ struct Match: View {
         }
     }
 }
-

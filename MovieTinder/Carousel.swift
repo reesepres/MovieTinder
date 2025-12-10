@@ -60,7 +60,7 @@ struct Carousel: View {
                     .offset(
                         x: (wholeAnimation.size.width - cardWidth) / 2
                             - CGFloat(currentIndex) * step
-                            + dragOffset     // <- actually use the drag offset
+                            + dragOffset    
                     )
                     .gesture(
                         DragGesture()
