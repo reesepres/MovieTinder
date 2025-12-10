@@ -122,7 +122,8 @@ struct FilterView: View{
                 VStack {
                     Picker("Start Year", selection: $filter.startYear) {
                         ForEach((1900...filter.endYear), id: \.self) { year in
-                            Text("\(year)").tag(year)
+                            let sYear = String(year)
+                            Text(sYear).tag(year)
                         }
                     }
                     .pickerStyle(.wheel)
@@ -134,7 +135,8 @@ struct FilterView: View{
                 VStack {
                     Picker("End Year", selection: $filter.endYear) {
                         ForEach((filter.startYear...2025), id: \.self) { year in
-                            Text("\(year)").tag(year)
+                            let sYear = String(year)
+                            Text(sYear).tag(year)
                         }
                     }
                     .pickerStyle(.wheel)
