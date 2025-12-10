@@ -178,13 +178,15 @@ class TmdbApi: ObservableObject {
                                     from: movie.releaseDate ?? Date(timeIntervalSince1970: 0)).year ?? 0
                     let language = movie.originalLanguage
                     let posterPath = movie.posterPath
+                    let adultOnly = movie.isAdultOnly ?? true
 
                     return rating >= filter.minRating &&
                            rating <= filter.maxRating &&
                            year >= filter.startYear &&
                            year <= filter.endYear &&
                            (filter.language.isEmpty || language == filter.language) &&
-                           posterPath != nil
+                           posterPath != nil &&
+                           !adultOnly
                 }
 
                 for movie in filtered {
