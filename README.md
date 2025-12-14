@@ -9,7 +9,7 @@ The experience is simple: everyone reacts to the same set of movies, and the app
 
 | Voting | Number of Users | Results |
 | ------ | ------ | ------- |
-| <img src="MovieTinder/screenshots/MovieTinder.png" width="250" />  | <img src="MovieTinder/screenshots/NumberOfUsers.png" width="250" />  | <img src="MovieTinder/screenshots/Matches.png" width="250" /> |
+| <img src="MovieTinder/screenshots/MovieTinder.PNG" width="250" />  | <img src="MovieTinder/screenshots/NumberOfUsers.PNG" width="250" />  | <img src="MovieTinder/screenshots/Matches.PNG" width="250" /> |
 
 ---
 
