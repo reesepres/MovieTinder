@@ -29,7 +29,7 @@ struct Main: View {
                         .foregroundColor(navy)
                     
                     SwipingVideo()
-                        .frame(width: 300, height:500)
+                        .frame(width: 250, height:450)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                     
                     Spacer()
