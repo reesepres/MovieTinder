@@ -9,7 +9,7 @@ import SwiftUI
 import TMDb
 import Combine
 
-struct Carousel: View {
+struct CarouselView: View {
     let movies: [MovieListItem]
     let onPosterTapped: (MovieListItem) -> Void
 
@@ -49,7 +49,7 @@ struct Carousel: View {
 
                     HStack(spacing: spacing) {
                         ForEach(loopedMovies.indices, id: \.self) { index in
-                            PosterCard(movie: loopedMovies[index])
+                            PosterCardView(movie: loopedMovies[index])
                                 .frame(width: cardWidth, height: 360)
                                 .onTapGesture {
                                     autoScroll = false
@@ -146,7 +146,7 @@ struct Carousel: View {
 }
 
 #Preview {
-    Carousel(
+    CarouselView(
         movies: [
             MovieListItem(
                 id: 1,

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MovieFilter: Equatable {
+struct FiltersView: Equatable {
     var minRating: Double = 0
     var maxRating: Double = 10
     var startYear: Int = 1900
@@ -53,7 +53,7 @@ private let languageOptions: [(name: String, code: String)] = [
 ]
 
 struct FilterView: View{
-    @Binding var filter: MovieFilter
+    @Binding var filter: FiltersView
     var onDone: () -> Void
     @ObservedObject var clientManager: TmdbApi
     @State private var showLanguageAlert: Bool = false

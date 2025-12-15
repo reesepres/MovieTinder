@@ -8,7 +8,7 @@
 import SwiftUI
 import AVKit
 
-struct SwipingVideo: View {
+struct SwipingVideoView: View {
     var body: some View {
         PlayerContainerView()
     }
@@ -37,7 +37,7 @@ private final class PlayerUIView: UIView {
         backgroundColor = .black //If it weren't to fill right this is the color that would show
 
         // Load video
-        if let url = Bundle.main.url(forResource: "SwipingVideo", withExtension: "mov") {
+        if let url = Bundle.main.url(forResource: "Swiping_demo", withExtension: "mov") {
             let item = AVPlayerItem(url: url)
 
             //Allows for looping

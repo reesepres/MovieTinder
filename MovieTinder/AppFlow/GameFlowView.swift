@@ -13,9 +13,9 @@ private struct ResultsView: View {
         case .none:
             NoMatch(onRestart: onRestart, onExit: onExit)
         case .single(let movie):
-            Match(movie: movie, onExit: onExit)
+            MatchView(movie: movie, onExit: onExit)
         case .multiple(let movies):
-            Matches(movies: movies, onRestart: onRestart, onExit: onExit)
+            MatchesView(movies: movies, onRestart: onRestart, onExit: onExit)
         }
     }
 }
@@ -28,7 +28,7 @@ struct GameFlowView: View {
     @Environment(\.dismiss) private var dismiss
     var onDone: () -> Void
     
-    init(players: [Player], movies: [MovieListItem], onDone: @escaping () -> Void) {
+    init(players: [PlayerModel], movies: [MovieListItem], onDone: @escaping () -> Void) {
         _viewModel = State(initialValue: ViewModel(players: players, movies: movies))
         self.onDone = onDone
     }
@@ -37,12 +37,12 @@ struct GameFlowView: View {
     var body: some View {
         switch viewModel.stage {
         case .ready(let playerIndex):
-            ReadyToPick(player: viewModel.players[playerIndex], playerNumber: playerIndex + 1 ) {
+            LobbyView(player: viewModel.players[playerIndex], playerNumber: playerIndex + 1 ) {
                 viewModel.start(for: playerIndex)
             }.navigationBarBackButtonHidden(true)
             
         case .swipe(let playerIndex, let movieIndex):
-            YesNoScreen(
+            SwipeView(
                 backgroundColor: viewModel.players[playerIndex].color,
                 index: movieIndex,
                 total: viewModel.movies.count,

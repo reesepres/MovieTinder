@@ -21,7 +21,7 @@ class TmdbApi: ObservableObject {
     
     // Preloaded movie cache
     private var movieCache: [MovieListItem] = []
-    private var cacheFilter: MovieFilter?
+    private var cacheFilter: FiltersView?
     private var cacheTask: Task<Void, Never>?
 
     func fetchDiscoveredMovies() async {
@@ -36,7 +36,7 @@ class TmdbApi: ObservableObject {
         }
     }
 
-    func startPreloadingMovies(filter: MovieFilter) {
+    func startPreloadingMovies(filter: FiltersView) {
         // Cancel any existing preload task
         cacheTask?.cancel()
         
@@ -52,7 +52,7 @@ class TmdbApi: ObservableObject {
         }
     }
     
-    private func preloadMoviesInBackground(filter: MovieFilter) async {
+    private func preloadMoviesInBackground(filter: FiltersView) async {
         print("Starting background preload for filter: \(filter)")
         isLoading = true
         
@@ -152,7 +152,7 @@ class TmdbApi: ObservableObject {
         }
     }
 
-    func fetchDiscoveredMovies(filteredBy filter: MovieFilter) async {
+    func fetchDiscoveredMovies(filteredBy filter: FiltersView) async {
         // Use cache if available
         if let cachedFilter = cacheFilter, cachedFilter == filter, movieCache.count >= 10 {
             let movies = getMoviesFromCache(count: 10)

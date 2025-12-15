@@ -1,7 +1,7 @@
 import SwiftUI
 import TMDb
 
-struct YesNoScreen: View {
+struct SwipeView: View {
     let backgroundColor: Color
     let index: Int           // current movie index (for "X of Y" if you want)
     let total: Int           // total movies
@@ -41,7 +41,7 @@ struct YesNoScreen: View {
                 
                 if let movie {
                     //This is the card you swipe
-                    DetailedPosterCard(movie: movie)
+                    DetailedPosterCardView(movie: movie)
                         .frame(maxWidth: 300)
                         .padding()
                         .background(backgroundColor)

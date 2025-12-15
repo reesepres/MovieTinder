@@ -23,14 +23,14 @@ extension GameFlowView {
         }
         
         var votes: [Int: [Bool]] = [:]
-        let players: [Player]
+        let players: [PlayerModel]
         var movies: [MovieListItem]
 
         var stage: Stage = .ready(playerIndex: 0)
         var currentMovieIndex = 0
         var outcome: Outcome = .none
         
-        init(players: [Player], movies: [MovieListItem]){
+        init(players: [PlayerModel], movies: [MovieListItem]){
             self.players = players
             self.movies = movies
         }

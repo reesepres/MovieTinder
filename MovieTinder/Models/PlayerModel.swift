@@ -2,12 +2,12 @@ import SwiftUI
 
 private let pink = Color(red: 225/225, green: 192/255, blue: 203/225)
 // testing Github Subscription to Slack
-struct Player: Identifiable {
+struct PlayerModel: Identifiable {
     let id: Int
     let color: Color
 }
 
-func makePlayers(count: Int) -> [Player] {
+func makePlayers(count: Int) -> [PlayerModel] {
     let Color1 = Color(hex: "C2F0FF") //Light Blue
     let Color2 = Color(hex: "A1E4FF") //BLUE  89D1FF
     let Color3 = Color(hex: "8AB8E6") //CREAMY PEACH 8AB8E6
@@ -19,7 +19,7 @@ func makePlayers(count: Int) -> [Player] {
     let colors: [Color] = [Color1, Color2, Color3, Color4, Color5, Color6, Color7,Color8]
 //    let colors: [Color] = [.red, .blue, .green, .orange, .purple, .yellow, .teal, pink]
     return (0..<count).map { i in
-        Player(id: i, color: colors[i % colors.count])
+        PlayerModel(id: i, color: colors[i % colors.count])
     }
 }
 extension Color {

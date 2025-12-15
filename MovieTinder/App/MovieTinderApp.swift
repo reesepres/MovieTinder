@@ -11,7 +11,7 @@ import SwiftUI
 struct MovieTinderApp: App {
     var body: some Scene {
         WindowGroup {
-            Main()
+            RootView()
             
         }
     }

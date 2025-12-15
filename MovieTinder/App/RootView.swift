@@ -2,14 +2,14 @@ import SwiftUI
 import TMDb
 import AVKit
 
-struct Main: View {
+struct RootView: View {
     
     @State private var goToReady: Bool = false
-    @State private var players: [Player]? = nil
+    @State private var players: [PlayerModel]? = nil
     @StateObject private var clientManager = TmdbApi()
     @State private var movies: [MovieListItem] = []
     @State private var showFilters: Bool = false
-    @State private var filter: MovieFilter = MovieFilter()
+    @State private var filter: FiltersView = FiltersView()
     
     var body: some View {
         let navy = Color(red: 10/225, green: 20/255, blue: 60/225)
@@ -28,7 +28,7 @@ struct Main: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                         .foregroundColor(navy)
                     
-                    SwipingVideo()
+                    SwipingVideoView()
                         .frame(width: 250, height:450)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                     
@@ -71,7 +71,7 @@ struct Main: View {
                 }
                 .toolbar(.hidden, for: .navigationBar)
                 .navigationDestination(isPresented: $goToReady){
-                    LoadingScreen(playerCount: (players ?? []).count, filter: filter, clientManager: clientManager)
+                    LoadingView(playerCount: (players ?? []).count, filter: filter, clientManager: clientManager)
                 }
                 .sheet(isPresented: $showFilters){
                     FilterView(filter: $filter, onDone: {
@@ -89,5 +89,5 @@ struct Main: View {
 }
 
 #Preview {
-    Main()
+    RootView()
 }

@@ -8,15 +8,15 @@
 import SwiftUI
 import TMDb
 
-struct LoadingScreen: View {
+struct LoadingView: View {
     let playerCount: Int
-    let filter: MovieFilter
+    let filter: FiltersView
     let clientManager: TmdbApi
     
     @State private var isReady: Bool = false
     @State private var isComplete: Bool = false
     @State private var movies: [MovieListItem] = []
-    @State private var players: [Player] = []
+    @State private var players: [PlayerModel] = []
     @Environment(\.dismiss) private var dismiss
     
     let navy = Color(red: 10/225, green: 20/255, blue: 60/225)

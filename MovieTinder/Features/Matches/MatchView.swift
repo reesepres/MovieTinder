@@ -9,7 +9,7 @@ import SwiftUI
 import TMDb
 
 // MARK: - Single Match Screen
-struct Match: View {
+struct MatchView: View {
     let movie: MovieListItem?
     let onExit: () -> Void
     
@@ -32,7 +32,7 @@ struct Match: View {
                     .foregroundColor(navy)
                 VStack(spacing: 24){
                     if let movie {
-                        DetailedPosterCard(movie: movie)
+                        DetailedPosterCardView(movie: movie)
                     } else {
                         Text("No movie available")
                             .font(.custom("ArialRoundedMTBold", size: 30))

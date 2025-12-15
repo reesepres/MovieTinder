@@ -6,7 +6,7 @@
 //
 import SwiftUI
 import TMDb
-struct Matches: View {
+struct MatchesView: View {
     let movies: [MovieListItem]
     let onRestart: () -> Void
     let onExit: () -> Void
@@ -33,7 +33,7 @@ struct Matches: View {
                     .foregroundColor(navy)
 
 
-                Carousel(
+                CarouselView(
                     movies: movies,
                     onPosterTapped: { movie in
                         selectedMovie = movie
@@ -78,14 +78,15 @@ struct Matches: View {
             .padding(.horizontal)
         }
         .sheet(item: $randomMatch){ match in
-            Match(movie: match.movie, onExit: {
+            MatchView(movie: match.movie, onExit: {
                 randomMatch = nil
                 onExit()
             })
         }
 
         .sheet(item: $selectedMovie) { movie in
-            DetailedPosterCard(movie: movie)
+            DetailedPosterCardView(movie: movie)
+                .presentationBackground(Color(white: 1))
         }
     }
 }
@@ -98,7 +99,7 @@ struct RandomMatch: Identifiable {
 }
 
 #Preview {
-    Matches(
+    MatchesView(
         movies: [
             MovieListItem(
                 id: 1,

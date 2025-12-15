@@ -8,7 +8,7 @@
 import SwiftUI
 import TMDb
 
-struct PosterCard: View {
+struct PosterCardView: View {
     let movie: MovieListItem
     private let navy = Color(red: 10/225, green: 20/255, blue: 60/225)
     
@@ -45,7 +45,7 @@ struct PosterCard: View {
         }
     }
 }
-extension PosterCard {
+extension PosterCardView {
     private var posterURL: URL? {
         if let path = movie.posterPath?.path {
             return URL(string: "https://image.tmdb.org/t/p/w500\(path)")

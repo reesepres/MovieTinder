@@ -6,8 +6,8 @@
 //
 import SwiftUI
 
-struct ReadyToPick: View {
-    let player: Player
+struct LobbyView: View {
+    let player: PlayerModel
     let playerNumber: Int
     let onStart: () -> Void   // called when they tap the button
     
@@ -51,5 +51,5 @@ struct ReadyToPick: View {
 
 #Preview {
     let samplePlayers = makePlayers(count: 3)
-    return ReadyToPick(player: samplePlayers[0], playerNumber: 1, onStart: {})
+    return LobbyView(player: samplePlayers[0], playerNumber: 1, onStart: {})
 }
