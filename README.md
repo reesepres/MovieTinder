@@ -9,7 +9,7 @@ The experience is simple: everyone reacts to the same set of movies, and the app
 
 | Voting | Number of Users | Results |
 | ------ | ------ | ------- |
-| <img src="MovieTinder/screenshots/MovieTinder.PNG" width="250" />  | <img src="MovieTinder/screenshots/NumberOfUsers.PNG" width="250" />  | <img src="MovieTinder/screenshots/Matches.PNG" width="250" /> |
+| <img src="MovieTinder/res/MovieTinder.PNG" width="250" />  | <img src="MovieTinder/res/NumberOfUsers.PNG" width="250" />  | <img src="MovieTinder/res/Matches.PNG" width="250" /> |
 
 ---
 
@@ -71,3 +71,10 @@ By: Reese Presnell (@reesepres), Owen Blanchard (@peroblanch), and Huzaifa Moham
    cd MovieTinder
 2. Follow the instructions in this link :
    [Running your app on your device](https://developer.apple.com/documentation/xcode/running-your-app-in-simulator-or-on-a-device)
+
+
+-----------------------------------------------------------------------------------------
+AI Usage acknowledgement:
+AI Models like chatgpt have been used as a personal guide,tutor through out the project time development in some files where the draft code is written by the developer and then prompted to the AI Model to suggest better aproach without giving the actual code but giving ideas to lead to the right better aproach as a guide and a tutor rather than code generator . 
+
+Huthaifa Mohammad
