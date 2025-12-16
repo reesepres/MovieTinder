@@ -40,7 +40,8 @@ struct RootView: View {
                             Task {
                                 await clientManager.fetchDiscoveredMovies(filteredBy: filter)
                                 self.goToReady = true
-//                                self.movies = clientManager.getMoviesFromCache(count: 10)
+//                                self.movies
+//                                clientManager.getMoviesFromCache(count: 10)
                             }
                         }
                     }
